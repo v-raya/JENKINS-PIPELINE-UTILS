@@ -5,6 +5,11 @@ description = "Jenkins Pipeline Utils CWS-CARES"
 
 sourceCompatibility = 1.8
 
+sourceSets {
+  main.groovy.srcDirs = ['src/']
+  test.groovy.srcDirs = ['test/']
+}
+
 repositories {
   // Spock releases are available from Maven Central
   mavenCentral()
