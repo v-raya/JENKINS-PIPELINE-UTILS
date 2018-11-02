@@ -19,7 +19,7 @@ class PullRequestMergedTrigger {
       ],
       regexpFilterText: '$pull_request_action:$trigger_key:$pull_request_merged',
       regexpFilterExpression: '^closed:' + triggerKeyParameter + ':true$',
-      causeString: 'Triggered by PR merge test',
+      causeString: 'Triggered by PR merge',
       printContributedVariables: false
     ]
   }
