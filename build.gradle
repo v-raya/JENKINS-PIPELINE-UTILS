@@ -10,6 +10,13 @@ sourceSets {
   test.groovy.srcDirs = ['test/']
 }
 
+test {
+  testLogging {
+    exceptionFormat = 'full'
+    events "PASSED", "STARTED", "FAILED", "SKIPPED"
+  }
+}
+
 repositories {
   // Spock releases are available from Maven Central
   mavenCentral()
