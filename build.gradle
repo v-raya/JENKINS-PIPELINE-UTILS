@@ -13,7 +13,7 @@ sourceSets {
 test {
   testLogging {
     exceptionFormat = 'full'
-    events "PASSED", "STARTED", "FAILED", "SKIPPED"
+    events "PASSED", "FAILED", "SKIPPED"
   }
 }
 
