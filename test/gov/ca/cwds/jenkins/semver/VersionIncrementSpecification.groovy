@@ -14,4 +14,26 @@ class VersionIncrementSpecification extends Specification {
     then:
     increment == IncrementTypes.PATCH
   }
+
+  def "#increment with a minor label"() {
+    given:
+    def versionIncrement = new VersionIncrement()
+
+    when:
+    def increment = versionIncrement.increment(["minor"])
+
+    then:
+    increment == IncrementTypes.MINOR
+  }
+
+  def "#increment with a major label"() {
+    given:
+    def versionIncrement = new VersionIncrement()
+
+    when:
+    def increment = versionIncrement.increment(["major"])
+
+    then:
+    increment == IncrementTypes.MAJOR
+  }
 }
