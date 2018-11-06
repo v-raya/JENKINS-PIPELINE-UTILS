@@ -9,6 +9,9 @@ class TagFetcher {
 
   def getTags() {
     def rawTags = script.sh(script: "git tag", returnStdout: true)
-    rawTags.split("\n").findAll { it =~ /^\d+\.\d+\.\d+$/ }
+    def list = rawTags.split("\n").findAll { it =~ /(^\d+\.\d+\.\d+)/ }
+    list.collect { tag ->
+       (tag =~ /(^\d+\.\d+\.\d+)/).with { hasGroup() ? it[0][0] : null }
+    }.unique()
   }
 }
