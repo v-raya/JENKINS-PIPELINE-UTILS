@@ -5,7 +5,7 @@ import spock.lang.Specification
 class GithubRepoTaggerSpecification extends Specification {
   class PipeLineScript {
 
-    def sshagent(block) {
+    def sshagent(hash, closure) {
     }
 
     def sh(hash) {
@@ -13,6 +13,18 @@ class GithubRepoTaggerSpecification extends Specification {
 
     def PipeLineScript() {
     }
+  }
+
+  def "#tagWith uses sshagent to push tags"() {
+    given: "a GithubRepoTagger"
+    def PipeLineScript pipeline = Mock(PipeLineScript)
+    def githubRepoTagger = new GithubRepoTagger(pipeline)
+
+    when: "it returns a non-zero return code"
+    githubRepoTagger.tagWith("1.1.1", "43-2b")
+
+    then: "executes using the sshagent"
+    1 * pipeline.sshagent([credentials: "43-2b"], _ as Closure)
   }
 
   def "#tagAndPush with failure to tag"() {
