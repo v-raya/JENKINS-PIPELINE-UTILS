@@ -24,7 +24,7 @@ class GithubRepoTaggerSpecification extends Specification {
     githubRepoTagger.tagWith("1.1.1", "43-2b")
 
     then: "executes using the sshagent"
-    1 * pipeline.sshagent([credentials: "43-2b"], _ as Closure)
+    1 * pipeline.sshagent([credentials: ["43-2b"]], _ as Closure)
   }
 
   def "#tagAndPush with failure to tag"() {

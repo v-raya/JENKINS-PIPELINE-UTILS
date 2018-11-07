@@ -11,7 +11,7 @@ class GithubRepoTagger {
   }
 
   def tagWith(tag, credentials) {
-    script.sshagent(credentials: credentials) { tagAndPush(tag) }
+    script.sshagent(credentials: [credentials]) { tagAndPush(tag) }
   }
 
   def tagAndPush(tag) {
