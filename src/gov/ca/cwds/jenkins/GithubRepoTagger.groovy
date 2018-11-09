@@ -1,4 +1,4 @@
-package gov.ca.cwds.jenkins.semver
+package gov.ca.cwds.jenkins
 
 class GithubRepoTagger {
   def GIT_SSH_COMMAND = 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"'
