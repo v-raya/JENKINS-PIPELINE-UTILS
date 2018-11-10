@@ -1,4 +1,4 @@
-package gov.ca.cwds.jenkins.semver
+package gov.ca.cwds.jenkins
 
 class ManifestUpdater {
   def CARES_GITHUB_URL = "git@github.com:ca-cwds/cws-cares.git"

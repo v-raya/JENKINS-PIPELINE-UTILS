@@ -1,4 +1,4 @@
-package gov.ca.cwds.jenkins.semver
+package gov.ca.cwds.jenkins
 
 import spock.lang.Specification
 
