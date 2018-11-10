@@ -31,7 +31,7 @@ class ManifestUpdaterSpecification extends Specification {
     1 * pipeline.readYaml([file: "preint.yaml"]) >> [dashboard: "1.2.4", cans: "1.4.5"]
     1 * pipeline.sh("rm preint.yaml")
     1 * pipeline.writeYaml([file: "preint.yaml", data: [dashboard: "1.3.0", cans: "1.4.5"]])
-    1 * pipeline.sshagent(credentials: "cr-01", _ as Closure)
+    1 * pipeline.sshagent(credentials: ["cr-01"], _ as Closure)
   }
 
   def "#commitVersionInCares commits the update"() {
