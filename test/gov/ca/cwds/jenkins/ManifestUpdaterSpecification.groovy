@@ -46,7 +46,7 @@ class ManifestUpdaterSpecification extends Specification {
     1 * pipeline.sh([script: "git status --porcelain", returnStdout: true]) >> "?? Readme.md"
     1 * pipeline.sh([script: "git config --global user.email cwdsdoeteam@osi.ca.gov"])
     1 * pipeline.sh([script: "git config --global user.name 'Jenkins'"])
-    1 * pipeline.sh([script: "git commit -am \"Update component version from script\""])
+    1 * pipeline.sh([script: "git commit -am \"Update component version from script :octocat:\""])
     1 * pipeline.sh([script: "git push origin master"])
   }
 
