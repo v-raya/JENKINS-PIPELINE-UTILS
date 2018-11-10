@@ -1,4 +1,4 @@
-#!/usr/bin/env
+#!/usr/bin/env groovy
 
 import gov.ca.cwds.jenkins.semver.LabelChecker
 
