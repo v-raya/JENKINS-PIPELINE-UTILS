@@ -29,6 +29,7 @@ class ManifestUpdaterSpecification extends Specification {
     then: "it updates the file and commits the change"
     1 * pipeline.git([branch: "master", credentialsId: "cr-01", url: "git@github.com:ca-cwds/cws-cares.git"])
     1 * pipeline.readYaml([file: "preint.yaml"]) >> [dashboard: "1.2.4", cans: "1.4.5"]
+    1 * pipeline.sh("rm preint.yaml")
     1 * pipeline.writeYaml([file: "preint.yaml", data: [dashboard: "1.3.0", cans: "1.4.5"]])
     1 * pipeline.sshagent(credentials: "cr-01", _ as Closure)
   }

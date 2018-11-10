@@ -32,6 +32,7 @@ class ManifestUpdater {
   private updateManifestFile(applicationName, manifestName, version) {
     def properties = script.readYaml file: "${manifestName}.yaml"
     properties."${applicationName}" = version
+    script.sh("rm ${manifestName}.yaml")
     script.writeYaml file: "${manifestName}.yaml", data: properties
   }
 }
