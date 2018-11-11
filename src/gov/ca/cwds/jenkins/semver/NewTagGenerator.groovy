@@ -3,6 +3,7 @@ package gov.ca.cwds.jenkins.semver
 class NewTagGenerator {
   def newTag(tags, increment) {
     def latestTag = mostRecentVersion(tags)
+    println "latestTag: ${latestTag}"
     def (major, minor, patch) = latestTag.tokenize(".").collect { it as Integer }
     switch (increment) {
       case IncrementTypes.MAJOR:
