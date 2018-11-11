@@ -5,5 +5,6 @@ Jenkins builds for CWDS.
 
 * [containerScan](docs/containerScan.md)
 * [checkForLabel](docs/checkForLabel.md)
+* [newSemVer](docs/newSemVer.md)
 * [pullRequestMergedTriggerProperties](docs/pullRequestMergedTriggerProperties.md)
 * [smokeTest](docs/smokeTest.md)
