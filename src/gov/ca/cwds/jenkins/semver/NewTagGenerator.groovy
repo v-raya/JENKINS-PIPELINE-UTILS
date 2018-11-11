@@ -65,8 +65,10 @@ class NewTagGenerator {
       verA.size() <=> verB.size()
     }
 
-    println "sorted versions: $sorted"
-    sorted.last()
+
+    script.echo "Versions: ${versions}"
+    script.echo "Sorted: ${sorted}"
+    sorted[-1]
   }
 
 }
