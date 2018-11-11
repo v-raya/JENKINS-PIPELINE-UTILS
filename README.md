@@ -9,3 +9,4 @@ Jenkins builds for CWDS.
 * [pullRequestMergedTriggerProperties](docs/pullRequestMergedTriggerProperties.md)
 * [smokeTest](docs/smokeTest.md)
 * [tagGithubRepo](docs/tagGithubRepo.md)
+* [updateManifest](docs/updateManifest.md)
