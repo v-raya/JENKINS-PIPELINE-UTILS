@@ -1,8 +1,15 @@
 package gov.ca.cwds.jenkins.semver
 
 class NewTagGenerator {
+  def script
+
+  NewTagGenerator(script) {
+    this.script = script
+  }
+
   def newTag(tags, increment) {
     def latestTag = mostRecentVersion(tags)
+    script.echo "Latest Tag: ${latestTag}"
     println "latestTag: ${latestTag}"
     def (major, minor, patch) = latestTag.tokenize(".").collect { it as Integer }
     switch (increment) {

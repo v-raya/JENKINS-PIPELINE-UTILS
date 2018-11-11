@@ -10,14 +10,14 @@ class SemVer {
   SemVer(script) {
     this.script = script
     this.tagFetcher = new TagFetcher(script)
-    this.newTagGenerator = new NewTagGenerator()
+    this.newTagGenerator = new NewTagGenerator(script)
     this.pullRequestEvent = new PullRequestEvent(script)
     this.versionIncrement = new VersionIncrement()
   }
 
   def newTag(label) {
     def existingTags = tagFetcher.getTags()
-    script.echo "Existing Tags: ${existingTags} "
+    script.echo "Existing Tags: ${existingTags}"
     if (!IncrementTypes.values().collect({ it.toString()}).contains(label.toUpperCase())) {
       def event = pullRequestEvent.getEvent()
       def labels = event.labels.collect([]) { it.name }
