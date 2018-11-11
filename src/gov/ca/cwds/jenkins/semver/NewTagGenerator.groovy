@@ -21,11 +21,19 @@ class NewTagGenerator {
     "$major.$minor.$patch"
   }
 
-  private String mostRecentVersion(List versions) {
-    versions.sort(false) { a, b ->
-      [a, b]*.tokenize('.')*.collect { it as Integer }.with { u, v ->
-        [u, v].transpose().findResult { x, y -> x <=> y ?: null } ?: u.size() <=> v.size()
+  private String mostRecentVersion(tags) {
+    tags.max { a, b ->
+      def versionA = a.tokenize('.')
+      def versionB = b.tokenize('.')
+      def commonIndices = Math.min(versionA.size(), versionB.size())
+      for (int index = 0; index < commonIndices; ++index) {
+        def numberA = versionA[index].toInteger()
+        def numberB = versionB[index].toInteger()
+        if (numberA != numberB) {
+          return numberA <=> numberB
+        }
       }
-    }.last()
+      versionA.size() <=> versionB.size()
+    }
   }
 }
