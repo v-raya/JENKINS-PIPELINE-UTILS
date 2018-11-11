@@ -10,7 +10,7 @@ class SemVer {
   SemVer(script) {
     this.script = script
     this.tagFetcher = new TagFetcher(script)
-    this.newTagGenerator = new NewTagGenerator(script)
+    this.newTagGenerator = new NewTagGenerator()
     this.pullRequestEvent = new PullRequestEvent(script)
     this.versionIncrement = new VersionIncrement()
   }

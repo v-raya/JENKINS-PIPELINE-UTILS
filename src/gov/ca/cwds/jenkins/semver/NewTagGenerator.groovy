@@ -3,15 +3,9 @@ package gov.ca.cwds.jenkins.semver
 import com.cloudbees.groovy.cps.NonCPS
 
 class NewTagGenerator {
-  def script
-
-  NewTagGenerator(script) {
-    this.script = script
-  }
 
   def newTag(tags, increment) {
     def latestTag = mostRecentVersion(tags)
-    script.echo "Latest Tag: ${latestTag}"
     def (major, minor, patch) = latestTag.tokenize(".").collect { it as Integer }
     switch (increment) {
       case IncrementTypes.MAJOR:
