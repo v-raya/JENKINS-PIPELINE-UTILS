@@ -21,5 +21,6 @@ class NewTagGeneratorSpecification extends Specification {
     ['100.0.1','99.1.0', '1.1.999'] | IncrementTypes.MAJOR || "101.0.0"
     ['100.0.1','99.1.0', '1.1.999'] | IncrementTypes.MINOR || "100.1.0"
     ['100.0.1','99.1.0', '1.1.999'] | IncrementTypes.PATCH || "100.0.2"
+    ['0.0.0', '1.2.9', '1.3.0'] | IncrementTypes.PATCH || "1.3.1"
   }
 }
