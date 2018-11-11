@@ -13,14 +13,14 @@ class ManifestUpdater {
   def update(applicationName, manifestName, credentialsId, version) {
     checkoutCares(credentialsId)
     updateManifestFile(applicationName, manifestName, version)
-    script.sshagent(credentials: [credentialsId]) { commitVersionInCares() }
+    script.sshagent(credentials: [credentialsId]) { commitVersionInCares(applicationName, version) }
   }
 
-  def commitVersionInCares() {
+  def commitVersionInCares(applicationName, version) {
     if (script.sh(script: "git status --porcelain", returnStdout: true)) {
       script.sh(script: "git config --global user.email ${GIT_EMAIL}")
       script.sh(script: "git config --global user.name '${GIT_USER}'")
-      script.sh(script: "git commit -am \"Update component version from script :octocat:\"")
+      script.sh(script: "git commit -am \"Update ${applicationName} to ${version} from Jenkins :octocat:\"")
       script.sh(script: "git push origin master")
     }
   }
