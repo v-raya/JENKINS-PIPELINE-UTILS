@@ -31,6 +31,7 @@ repositories {
 
 dependencies {
   // mandatory dependencies for using Spock
+  compile 'com.cloudbees:groovy-cps:1.22'
   compile "org.codehaus.groovy:groovy-all:2.4.15"
   testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
 

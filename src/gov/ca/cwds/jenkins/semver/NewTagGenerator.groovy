@@ -1,5 +1,7 @@
 package gov.ca.cwds.jenkins.semver
 
+import com.cloudbees.groovy.cps.NonCPS
+
 class NewTagGenerator {
   def script
 
@@ -28,47 +30,20 @@ class NewTagGenerator {
     "$major.$minor.$patch"
   }
 
-  // private String mostRecentVersion(tags) {
-  //   tags.max { a, b ->
-  //     def versionA = a.tokenize('.')
-  //     def versionB = b.tokenize('.')
-  //     def commonIndices = Math.min(versionA.size(), versionB.size())
-  //     for (int index = 0; index < commonIndices; ++index) {
-  //       def numberA = versionA[index].toInteger()
-  //       def numberB = versionB[index].toInteger()
-  //       if (numberA != numberB) {
-  //         return numberA <=> numberB
-  //       }
-  //     }
-  //     versionA.size() <=> versionB.size()
-  //   }
-  // }
-
-  private String mostRecentVersion(List versions) {
-    def sorted = versions.sort(false) { a, b ->
-      List verA = a.tokenize('.')
-      List verB = b.tokenize('.')
-
-      def commonIndices = Math.min(verA.size(), verB.size())
-
-      for (int i = 0; i < commonIndices; ++i) {
-        def numA = verA[i].toInteger()
-        def numB = verB[i].toInteger()
-        println "comparing $numA and $numB"
-
-        if (numA != numB) {
-          return numA <=> numB
+  @NonCPS
+  String mostRecentVersion(tags) {
+    tags.max { a, b ->
+      def versionA = a.tokenize('.')
+      def versionB = b.tokenize('.')
+      def commonIndices = Math.min(versionA.size(), versionB.size())
+      for (int index = 0; index < commonIndices; ++index) {
+        def numberA = versionA[index].toInteger()
+        def numberB = versionB[index].toInteger()
+        if (numberA != numberB) {
+          return numberA <=> numberB
         }
       }
-
-      // If we got this far then all the common indices are identical, so whichever version is longer must be more recent
-      verA.size() <=> verB.size()
+      versionA.size() <=> versionB.size()
     }
-
-
-    script.echo "Versions: ${versions}"
-    script.echo "Sorted: ${sorted}"
-    sorted[-1]
   }
-
 }
