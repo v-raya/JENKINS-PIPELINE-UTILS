@@ -17,7 +17,7 @@ class SemVer {
 
   def newTag(label) {
     def existingTags = tagFetcher.getTags()
-    if (!IncrementTypes.values()*.toString().contains(label.toUpperCase())) {
+    if (!IncrementTypes.values().collect({ it.toString()}).contains(label.toUpperCase())) {
       def event = pullRequestEvent.getEvent()
       def labels = event.labels.collect([]) { it.name }
       label = versionIncrement.increment(labels)
