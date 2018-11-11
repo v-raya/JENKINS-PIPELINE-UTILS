@@ -24,8 +24,6 @@ class SemVer {
     } else {
       label = label.toUpperCase() as IncrementTypes
     }
-    script.echo "Existing Tags: ${existingTags}"
-    script.echo "Last tag class: ${existingTags.last().class}"
     newTagGenerator.newTag(existingTags, label)
   }
 }
