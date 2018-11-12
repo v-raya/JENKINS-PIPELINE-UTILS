@@ -4,9 +4,8 @@ class SmokeTester {
   def script
   def path
 
-  SmokeTester(script, path) {
+  SmokeTester(script) {
     this.script = script
-    this.path = path
   }
   
   def runSmokeTest(path) {

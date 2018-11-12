@@ -12,19 +12,16 @@ class SmokeTesterSpecification extends Specification {
   }
 
   def "#runSmokeTest"() {
-    def buildArguments
 
     given:
     def pipeline = Mock(PipeLineScript)
     def passed = './test/resources/smoketest/passed.sh'
     def failed = './test/resources/smoketest/failed.sh'
-    def smokeTestPassed = new SmokeTester(pipeline, passed)
-    def smokeTestFailed = new SmokeTester(pipeline, failed)
-    
+    def smokeTester = new SmokeTester(pipeline)
 
     when:
-    def smokePassed = smokeTestPassed.runSmokeTest(passed)
-    def smokeFailed = smokeTestFailed.runSmokeTest(failed)
+    def smokePassed = smokeTester.runSmokeTest(passed)
+    def smokeFailed = smokeTester.runSmokeTest(failed)
 
     then:
     smokePassed == "smoke test passed"
