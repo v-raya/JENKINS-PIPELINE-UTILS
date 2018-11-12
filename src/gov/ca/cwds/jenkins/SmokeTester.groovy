@@ -2,7 +2,6 @@ package gov.ca.cwds.jenkins
 
 class SmokeTester {
   def script
-  def path
 
   SmokeTester(script) {
     this.script = script
