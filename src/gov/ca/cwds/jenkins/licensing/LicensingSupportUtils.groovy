@@ -4,6 +4,7 @@ import gov.ca.cwds.jenkins.utils.ProjectUtils
 
 class LicensingSupportUtils implements Serializable {
     final static def LICENSE_FOLDER = 'legal'
+    final static def MSG_NO_LICENSING_SUPPORT = 'No known Licensing Support is found in the project'
 
     static LicensingSupportType getLicensingSupportType(script) {
         def result = LicensingSupportType.NONE

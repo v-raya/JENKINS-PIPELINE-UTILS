@@ -1,6 +1,7 @@
 package gov.ca.cwds.jenkins.licensing
 
 import static gov.ca.cwds.jenkins.licensing.LicensingSupportUtils.LICENSE_FOLDER
+import static gov.ca.cwds.jenkins.licensing.LicensingSupportUtils.MSG_NO_LICENSING_SUPPORT
 import static gov.ca.cwds.jenkins.utils.ProjectUtils.GIT_EMAIL
 import static gov.ca.cwds.jenkins.utils.ProjectUtils.GIT_USER
 
@@ -23,7 +24,7 @@ class LicensingSupport implements Serializable {
             this.script.echo("Detected Licensing Support Type: ${this.licensingSupportType.title}")
         }
         if (LicensingSupportType.NONE == this.licensingSupportType) {
-            throw new Exception('No known Licensing Support is found in the project')
+            throw new Exception(MSG_NO_LICENSING_SUPPORT)
         }
     }
 
