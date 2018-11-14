@@ -91,14 +91,15 @@ class LicensingSupportSpecification extends Specification {
     }
 
 
-    def "When it is the back-end project with gradle and is uses hierynomus license then gradlew is called to generate license report"() {
+    def "When it is the back-end project with gradle and it uses hierynomus license then gradlew is called to generate license report"() {
         given:
         def pipeline = new PipeLineScript()
         pipeline.behaviour = [
                 sh : [
                         'grep -c "com.github.hierynomus.license" build.gradle' : 0,
                         'test -e build.gradle' : 0,
-                        'test -e package.json' : 1
+                        'test -e package.json' : 1,
+                        'grep -c "license_finder" package.json' : 1
                 ]
         ]
         def licensingSupport = new LicensingSupport(pipeline, 'master', null)
@@ -109,6 +110,28 @@ class LicensingSupportSpecification extends Specification {
         then:
         pipeline.isLastShScriptCalled('./gradlew deleteLicenses downloadLicenses copyLicenses')
         pipeline.isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
+        pipeline.isMessageEchoed('Generating License Information')
+    }
+
+    def "When it is the front-end project with package.json and it uses license finder then yarn is called to generate license report"() {
+        given:
+        def pipeline = new PipeLineScript()
+        pipeline.behaviour = [
+                sh : [
+                        'grep -c "com.github.hierynomus.license" build.gradle' : 1,
+                        'test -e build.gradle' : 1,
+                        'test -e package.json' : 0,
+                        'grep -c "license_finder" package.json' : 0
+                ]
+        ]
+        def licensingSupport = new LicensingSupport(pipeline, 'master', null)
+
+        when:
+        licensingSupport.generateLicenseReport()
+
+        then:
+        pipeline.isLastShScriptCalled('yarn licenses-report')
+        pipeline.isMessageEchoed('Detected Licensing Support Type: Ruby License Finder Plugin')
         pipeline.isMessageEchoed('Generating License Information')
     }
 }
