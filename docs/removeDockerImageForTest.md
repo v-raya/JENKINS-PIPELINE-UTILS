@@ -5,6 +5,9 @@
 ```groovy
   removeDockerImageForTest()
 ```
+
+This is used to remove a docker image created in [buildDockerImageForTest](buildDockerImageForTest.md)
+
 ## Examples
 
 ```groovy

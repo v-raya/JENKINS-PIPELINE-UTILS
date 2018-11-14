@@ -5,6 +5,9 @@
 ```groovy
   buildDockerImageForTest()
 ```
+
+This is used to create a docker image used for linting ( and in the future other testing ) against.
+
 ## Examples
 
 ```groovy

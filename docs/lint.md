@@ -6,6 +6,7 @@
   lint()
 ```
 
+This is used to perform linting tasks on the project.  It determines the type of project ( JAVA, RUBY, JAVSCRIPT, or any combination of the 3 ) and runs either sonarqube, rubocop, or eslint respectively.
 
 ## Examples
 
