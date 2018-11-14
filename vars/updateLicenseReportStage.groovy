@@ -13,6 +13,9 @@ def call(stageBody) {
     stage('Update License Report') {
         def sshAgent = new SshAgent(this, stageParams.sshCredentialsId)
         def licensingSupport = new LicensingSupport(this, stageParams.branch, sshAgent)
+        if (stageParams.gradleRuntime) {
+            licensingSupport.gradleRuntime = stageParams.gradleRuntime
+        }
         licensingSupport.generateAndPushLicenseReport()
     }
 }
