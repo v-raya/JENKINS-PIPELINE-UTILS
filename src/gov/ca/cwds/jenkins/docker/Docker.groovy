@@ -2,37 +2,34 @@ package gov.ca.cwds.jenkins.docker
 
 class Docker {
   def script
-  def docker
+  def globalDocker
+  def jobName
+  def buildId
 
-  Docker(script, docker) {
+  def DOCKEFILE_TEST_PATH = './docker/test/Dockerfile'
+
+  Docker(jobName, buildId, script, globalDocker) {
+    this.jobName = jobName
+    this.buildId = buildId
     this.script = script
-    this.docker = docker
+    this.globalDocker = globalDocker
   }
 
-  def createTestingImage(pathToDockerFile) {
-    script.echo "Building ${testingImageName()}"
-    docker.build("${testingImageName()}", "-f ${pathToDockerFile} .")
+  def createTestingImage() {
+    globalDocker.build("${testingImageName()}", "-f ${DOCKEFILE_TEST_PATH} .")
   }
 
   def removeTestingImage() {
-    script.echo "Removing ${testingImageName()}"
-
-    def stdout = new StringBuilder(), stderr = new StringBuilder()
-    def proc = "docker rmi ${testingImageName()}".execute()
-    proc.consumeProcessOutput(stdout, stderr)
-    proc.waitForOrKill(1000)
-    script.echo "out> ${stdout} err> ${stderr}"
+    def status = script.sh(script: "docker rmi ${testingImageName()}", returnStatus: true)
   }
 
-  def testingImageName() {
-    return "cwds/${script.env.JOB_NAME}:test-build-${script.env.BUILD_ID}"
+  def withTestingImage(command) {
+    def dockerImage = globalDocker.image("${testingImageName()}")
+    dockerImage.withRun { container -> script.sh "docker exec -t ${container.id} ${command}"}
   }
 
-  def withTestingImage(todo) {
-    def dockerImage = docker.image("${testingImageName()}")
-
-    dockerImage.withRun { container ->
-      todo(container.id)
-    }
+  private testingImageName() {
+    return "cwds/${jobName}:test-build-${buildId}"
   }
+
 }

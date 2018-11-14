@@ -2,7 +2,6 @@
 import gov.ca.cwds.jenkins.docker.Docker
 
 def call() { 
-  echo 'removing image for test'
-  docker = new Docker(this, docker)
+  def docker = new Docker(this.env.JOB_NAME, this.env.BUILD_ID, this, docker)
   docker.removeTestingImage()
 }

@@ -1,41 +1,62 @@
 package gov.ca.cwds.jenkins
 
 import spock.lang.Specification
+import gov.ca.cwds.jenkins.common.ProjectTypesDeterminer
+import gov.ca.cwds.jenkins.common.ProjectTypes
+import gov.ca.cwds.jenkins.docker.Docker
 
 class StaticAnalyzerSpecification extends Specification {
 
-    class PipelineScript {
-        def echo(string) {}
-
-        def env = [
-            'WORKSPACE': '.'
-        ] 
-    }
-
-    class Docker {
-        def withTestingImage(closure) {}
-    }
-
-
-  def "does not contain file"() {
-    given:
-    def staticAnalyzer = new StaticAnalyzer(new PipelineScript(), new Docker())
-  
-    when:
-    def containsFile = staticAnalyzer.containsFile('youcannotfindme.file')
-
-    then:
-    containsFile == false
+  class PipelineScript {
+      def withSonarQubeEnv(name, closure) {
+      }
   }
 
-    def "does contain file"() {
+  def "#lint javascript project linted properly"() {
     given:
-    def staticAnalyzer = new StaticAnalyzer(new PipelineScript(), new Docker())
+    def projectTypesDeterminer = Stub(ProjectTypesDeterminer)
+    projectTypesDeterminer.determineProjectTypes(_) >> [ProjectTypes.JAVASCRIPT]
+    def pipelineScript = Stub(PipelineScript)  
+    def docker = Mock(Docker)
+
+    def staticAnalyzer = new StaticAnalyzer(projectTypesDeterminer, 'some_path', docker, pipelineScript)
   
     when:
-    def containsFile = staticAnalyzer.containsFile('build.gradle')
+    staticAnalyzer.lint()
 
     then:
-    containsFile == true
+    1 * docker.withTestingImage('npm run lint')
   }
+
+  def "#lint ruby project linted properly"() {
+    given:
+    def projectTypesDeterminer = Stub(ProjectTypesDeterminer)
+    projectTypesDeterminer.determineProjectTypes(_) >> [ProjectTypes.RUBY]
+    def pipelineScript = Stub(PipelineScript)
+    def docker = Mock(Docker)
+
+    def staticAnalyzer = new StaticAnalyzer(projectTypesDeterminer, 'some_path', docker, pipelineScript)
+  
+    when:
+    staticAnalyzer.lint()
+
+    then:
+    1 * docker.withTestingImage('rubocop')
+  }
+
+  def "#lint java project linted properly"() {
+    given:
+    def projectTypesDeterminer = Stub(ProjectTypesDeterminer)
+    projectTypesDeterminer.determineProjectTypes(_) >> [ProjectTypes.JAVA]
+    def pipelineScript = Mock(PipelineScript)
+    def docker = Stub(Docker)
+
+    def staticAnalyzer = new StaticAnalyzer(projectTypesDeterminer, 'some_path', docker, pipelineScript)
+  
+    when:
+    staticAnalyzer.lint()
+
+    then:
+    1 * pipelineScript.withSonarQubeEnv('Core-SonarQube', _ as Closure)
+  }  
 }

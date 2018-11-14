@@ -1,64 +1,34 @@
 package gov.ca.cwds.jenkins
-
 import gov.ca.cwds.jenkins.docker.Docker
+import gov.ca.cwds.jenkins.common.ProjectTypesDeterminer
+import gov.ca.cwds.jenkins.common.ProjectTypes
 
 class StaticAnalyzer {
+  def workspacePath
+  Docker docker
+  ProjectTypesDeterminer projectTypesDeterminer
   def script
-  def docker
 
-  def LINT_CONFIGS_RUBY = '.rubocop.yml'
-  def LINT_CONFIGS_JAVASCRIPT = '.eslintrc'
-  def LINT_CONFIGS_JAVA = 'build.gradle' 
-
-  StaticAnalyzer(script, docker) {
-    this.script = script
+  StaticAnalyzer(projectTypesDeterminer, workspacePath, docker, script) {
+    this.projectTypesDeterminer = projectTypesDeterminer
+    this.workspacePath = workspacePath
     this.docker = docker
+    this.script = script
   }
 
   def lint() {
-    if(isRubyProject()) {
-      script.echo 'Running rubocop'
-      docker.withTestingImage(lintRubyClosure)
-    } 
-    if(isJavascriptProject()) {
-      script.echo 'Running eslint'
-      docker.withTestingImage(lintJavascriptClosure)
-    } 
-    if(isJavaProject()) {
-      script.echo 'Running sonarQube'
-      withSonarQubeEnv('Core-SonarQube') {
+    def projectTypes = projectTypesDeterminer.determineProjectTypes(workspacePath);
+    if( projectTypes.contains(ProjectTypes.JAVA) ) {
+      script.withSonarQubeEnv('Core-SonarQube') {
 			  buildInfo = rtGradle.run buildFile: 'build.gradle', switches: '--info', tasks: 'sonarqube'
       }  
-    } 
-  }
-
-  def isRubyProject() {
-    return containsFile(LINT_CONFIGS_RUBY)
-  }
-
-  def isJavascriptProject() {
-    return containsFile(LINT_CONFIGS_JAVASCRIPT) || packageJsonContainsEslintConfig()
-  }
-
-  def isJavaProject() {
-    return containsFile(LINT_CONFIGS_JAVA)
-  }
-
-  def containsFile(configFileName) {
-    def command = "ls -al ${script.env.WORKSPACE}/${configFileName} 2>/dev/null"
-    return !command.execute().text.trim().isEmpty()
-  }
-
-  def packageJsonContainsEslintConfig() {
-    def searchPackageJsonCommand = "grep eslintConfig ${script.env.WORKSPACE}/package.json 2>/dev/null"
-    return !searchPackageJsonCommand.execute().text.trim().isEmpty()
-  }
-
-  def lintJavascriptClosure = { String containerId ->
-      script.sh "docker exec -t ${containerId} npm run lint"
+    }
+    if( projectTypes.contains(ProjectTypes.JAVASCRIPT) ) {
+      docker.withTestingImage('npm run lint')
+    }
+    if( projectTypes.contains(ProjectTypes.RUBY) ) {
+      docker.withTestingImage('rubocop')
     }
 
-  def lintRubyClosure = { String containerId ->
-      script.sh "docker exec -t ${containerId} rubocop"
-    }
+  }
 }

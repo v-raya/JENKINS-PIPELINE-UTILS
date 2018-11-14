@@ -3,29 +3,68 @@ package gov.ca.cwds.jenkins.docker
 import spock.lang.Specification
 
 class DockerSpecification extends Specification {
+  def jobName = 'myjob'
+  def buildId = '22'
 
-    class PipelineScript {
-        def echo(string) {}
-
-        def env = [
-            'JOB_NAME': 'myjob',
-            'BUILD_ID': '22'
-        ] 
+  class PipelineScript {
+    def sh(hash) {
+    }
+  }
+    
+  class GlobalDocker {
+    def build(imageName, parameters) {
     }
 
-    class GlobalDocker {
-      
+    def image(imageName) {
     }
+  }
+
+  class DockerImage {
+    def withRun(closure) {
+
+    }
+  }
 
 
-  def "testing image name corect"() {
+  def "#createTestingImage implemented correctly"() {
     given:
-    def docker = new Docker(new PipelineScript(), new GlobalDocker())
+    def globalDocker = Mock(GlobalDocker)
+    def pipelineScript = new PipelineScript()
+    def docker = new Docker(jobName, buildId, pipelineScript, globalDocker)
   
     when:
-    def testingImageName = docker.testingImageName()
+    docker.createTestingImage()
 
     then:
-    testingImageName == 'cwds/myjob:test-build-22'
+    1 * globalDocker.build('cwds/myjob:test-build-22', '-f ./docker/test/Dockerfile .')
   }
+
+  def "#removeTestingImage implemented correctly"() {
+    given:
+    def globalDocker = Stub(GlobalDocker)
+    def pipelineScript = Mock(PipelineScript)
+    def docker = new Docker(jobName, buildId, pipelineScript, globalDocker)
+  
+    when:
+    docker.removeTestingImage()
+
+    then:
+    1 * pipelineScript.sh([script: "docker rmi cwds/myjob:test-build-22", returnStatus: true]) >> 0
+  }
+
+  def "#withTestingImage implemented correctly"() {
+    given:
+    def dockerImage = Mock(DockerImage)
+    def globalDocker = Stub(GlobalDocker)
+    globalDocker.image(_) >> dockerImage
+    
+    def pipelineScript = Mock(PipelineScript)
+    def docker = new Docker(jobName, buildId, pipelineScript, globalDocker)
+  
+    when:
+    docker.withTestingImage('some_command')
+
+    then:
+    1 * dockerImage.withRun(_ as Closure)
+  }  
 }
