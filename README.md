@@ -5,3 +5,4 @@ Jenkins builds for CWDS.
 
 * [containerScan](docs/containerScan.md)
 * [smokeTest](docs/smokeTest.md)
+* Lisensing: Please see examples of Jenkins files under [examples/licensing](examples/licensing)
