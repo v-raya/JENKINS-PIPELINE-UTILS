@@ -20,12 +20,12 @@ class SmokeTesterSpecification extends Specification {
     def smokeTester = new SmokeTester(pipeline)
 
     when:
-    def smokePassed = smokeTester.runSmokeTest(passed)
-    def smokeFailed = smokeTester.runSmokeTest(failed)
+    def smokePassed = smokeTester.runSmokeTest(passed, "test")
+    def smokeFailed = smokeTester.runSmokeTest(failed, "test")
 
     then:
     smokePassed == "smoke test passed"
-    smokeFailed == "smoke test failed"
+    smokeFailed == null
 
   }
 }
