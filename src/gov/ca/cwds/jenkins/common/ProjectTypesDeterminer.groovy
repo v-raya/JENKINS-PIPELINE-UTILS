@@ -12,6 +12,7 @@ class ProjectTypesDeterminer {
   }
   
   def determineProjectTypes(directory) {
+    script.echo "the directoy is ${directory}"
     def projectTypes = []
     if(isJavaProject(directory)) {
       projectTypes.add(ProjectTypes.JAVA)
@@ -23,25 +24,25 @@ class ProjectTypesDeterminer {
       projectTypes.add(ProjectTypes.RUBY)
     }
 
-    return projectTypes
+    projectTypes
   }
 
   private isJavaProject(directory) {
     def filename = "${directory}/${LINT_CONFIGS_JAVA}"
-    return fileExists(filename)
+    fileExists(filename)
   }
 
   private isJavascriptProject(directory) {
     def filename = "${directory}/${LINT_CONFIGS_JAVASCRIPT}"
-    return fileExists(filename)
+    fileExists(filename)
   }
 
   private isRubyProject(directory) {
     def filename = "${directory}/${LINT_CONFIGS_RUBY}"
-    return fileExists(filename)
+    fileExists(filename)
   }
 
   private fileExists(filename) {
-    return script.sh(script: "ls -al ${filename}", returnStatus: true) == 0
+    script.sh(script: "ls -al ${filename}", returnStatus: true) == 0
   }
 }

@@ -1,35 +1,28 @@
 package gov.ca.cwds.jenkins.docker
 
+import gov.ca.cwds.jenkins.common.BuildMetadata
+
 class Docker {
   def script
-  def globalDocker
-  def jobName
-  def buildId
 
-  def DOCKEFILE_TEST_PATH = './docker/test/Dockerfile'
-
-  Docker(jobName, buildId, script, globalDocker) {
-    this.jobName = jobName
-    this.buildId = buildId
+  Docker(script) {
     this.script = script
-    this.globalDocker = globalDocker
   }
 
-  def createTestingImage() {
-    globalDocker.build("${testingImageName()}", "-f ${DOCKEFILE_TEST_PATH} .")
+  def createTestingImage(String pathToDockerfile, BuildMetadata buildMetadata) {
+    script.docker.build("${testingImageName(buildMetadata)}", "-f ${pathToDockerfile} .")
   }
 
-  def removeTestingImage() {
-    def status = script.sh(script: "docker rmi ${testingImageName()}", returnStatus: true)
+  def removeTestingImage(BuildMetadata buildMetadata) {
+    def status = script.sh(script: "docker rmi ${testingImageName(buildMetadata)}", returnStatus: true)
   }
 
-  def withTestingImage(command) {
-    def dockerImage = globalDocker.image("${testingImageName()}")
+  def withTestingImage(String command, BuildMetadata buildMetadata) {
+    def dockerImage = script.docker.image("${testingImageName(buildMetadata)}")
     dockerImage.withRun { container -> script.sh "docker exec -t ${container.id} ${command}"}
   }
 
-  private testingImageName() {
-    return "cwds/${jobName}:test-build-${buildId}"
+  private testingImageName(BuildMetadata buildMetadata) {
+    return "cwds/${buildMetadata.jobName}:test-build-${buildMetadata.buildId}"
   }
-
 }

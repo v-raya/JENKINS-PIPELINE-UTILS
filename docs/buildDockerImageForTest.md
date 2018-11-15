@@ -3,8 +3,10 @@
 ## Usage
 
 ```groovy
-  buildDockerImageForTest()
+  buildDockerImageForTest(String pathToDockerFile)
 ```
+
+* *pathToDockerFile* is the path to the Dockerfile used to build the image.
 
 This is used to create a docker image used for linting ( and in the future other testing ) against.
 
@@ -12,13 +14,9 @@ This is used to create a docker image used for linting ( and in the future other
 
 ```groovy
 stage('Testing Statge') {
- buildDockerImageForTest()
+ buildDockerImageForTest('./docker/test/Dockerfile')
 }
 ```
-
-## Dockerfile
-By convention the library builds the docker image for test from **./docker/test/Dockerfile**
-There currently is no method for customizing the location of the Dockerfile.
 
 ## Docker Image
 The library creates a docker image with the name **cwds/{JOB_NAME}:test-build-${BUILD\_ID}**

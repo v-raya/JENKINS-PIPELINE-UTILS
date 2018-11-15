@@ -1,34 +1,29 @@
 package gov.ca.cwds.jenkins
 import gov.ca.cwds.jenkins.docker.Docker
-import gov.ca.cwds.jenkins.common.ProjectTypesDeterminer
+import gov.ca.cwds.jenkins.common.BuildMetadata
 import gov.ca.cwds.jenkins.common.ProjectTypes
 
 class StaticAnalyzer {
-  def workspacePath
   Docker docker
-  ProjectTypesDeterminer projectTypesDeterminer
   def script
 
-  StaticAnalyzer(projectTypesDeterminer, workspacePath, docker, script) {
-    this.projectTypesDeterminer = projectTypesDeterminer
-    this.workspacePath = workspacePath
+  StaticAnalyzer(docker, script) {
     this.docker = docker
     this.script = script
   }
 
-  def lint() {
-    def projectTypes = projectTypesDeterminer.determineProjectTypes(workspacePath);
+  def lint(buildMetadata) {
+    def projectTypes = buildMetadata.projectTypes()
     if( projectTypes.contains(ProjectTypes.JAVA) ) {
       script.withSonarQubeEnv('Core-SonarQube') {
 			  buildInfo = rtGradle.run buildFile: 'build.gradle', switches: '--info', tasks: 'sonarqube'
       }  
     }
     if( projectTypes.contains(ProjectTypes.JAVASCRIPT) ) {
-      docker.withTestingImage('npm run lint')
+      docker.withTestingImage('npm run lint', buildMetadata)
     }
     if( projectTypes.contains(ProjectTypes.RUBY) ) {
-      docker.withTestingImage('rubocop')
+      docker.withTestingImage('rubocop', buildMetadata)
     }
-
   }
 }
