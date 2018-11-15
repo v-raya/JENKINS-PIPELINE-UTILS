@@ -1,5 +1,6 @@
 package gov.ca.cwds.jenkins
 
+import gov.ca.cwds.jenkins.licensing.LicenseReportUpdater
 import gov.ca.cwds.jenkins.licensing.LicensingSupport
 import gov.ca.cwds.jenkins.utils.ProjectUtils
 import spock.lang.Specification
@@ -288,6 +289,44 @@ class LicensingSupportSpecification extends Specification {
     ] as Set
     areShScriptsCalled(expectedShScriptsCalled)
     isMessageEchoed('Detected Licensing Support Type: Ruby License Finder Plugin')
+    isMessageEchoed('Generating License Information')
+    isMessageEchoed('Updating License Information')
+  }
+
+  def "When a GradleRuntime is provided and it is the back-end project with gradle and it uses hierynomus license then LicenseReportUpdater uses GradleRuntime and updates license report"() {
+    given:
+    behaviour = [
+      sh: [
+        'test -e build.gradle'                                : 0,
+        'grep -c "com.github.hierynomus.license" build.gradle': 0,
+        'test -e package.json'                                : 1,
+        'grep -c "license_finder" package.json'               : 1
+      ],
+      readFileResult: 'package gov.ca.cwds'
+    ]
+    setUpGitSshCommands()
+    def pipeline = new PipeLineScript()
+    def licenseReportUpdater = new LicenseReportUpdater(pipeline, 'master', 'credentials-id')
+    licenseReportUpdater.gradleRuntime = new GradleRuntime()
+
+    when:
+    licenseReportUpdater.run()
+
+    then:
+    isCredentialsIdUsed('credentials-id')
+    def expectedShScriptsCalled = [
+      'test -e build.gradle',
+      'grep -c "com.github.hierynomus.license" build.gradle',
+      SSH_GIT_CONFIG_USER,
+      SSH_GIT_CONFIG_EMAIL,
+      SSH_GIT_ADD_LEGAL,
+      SSH_GIT_COMMIT,
+      SSH_GIT_PUSH
+    ] as Set
+    areShScriptsCalled(expectedShScriptsCalled)
+    isTextPassedToWriteFile('package gov.ca.cwds' + ADDITIONAL_LICENSING_GRADLE_TASKS)
+    areLastGradleRuntimeParameters([buildFile: 'build.gradle', tasks: 'deleteLicenses downloadLicenses copyLicenses'])
+    isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')
     isMessageEchoed('Updating License Information')
   }

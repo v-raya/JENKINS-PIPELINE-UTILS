@@ -1,8 +1,18 @@
 package gov.ca.cwds.jenkins
 
-import gov.ca.cwds.jenkins.licensing.LicensingSupport
-import gov.ca.cwds.jenkins.SshAgent
+import gov.ca.cwds.jenkins.licensing.LicenseReportUpdater
 
+/*
+Usage in Jenkins pipeline:
+
+  updateLicenseReportStage {
+    branch = BRANCH
+    sshCredentialsId = SSH_CRED_ID
+    gradleRuntime = rtGradle
+  }
+
+gradleRuntime is optional
+ */
 def call(stageBody) {
   // evaluate the body block, and collect configuration into the object
   def stageParams = [:]
@@ -11,11 +21,8 @@ def call(stageBody) {
   stageBody()
 
   stage('Update License Report') {
-    def sshAgent = new SshAgent(this, stageParams.sshCredentialsId)
-    def licensingSupport = new LicensingSupport(this, stageParams.branch, sshAgent)
-    if (stageParams.gradleRuntime) {
-      licensingSupport.gradleRuntime = stageParams.gradleRuntime
-    }
-    licensingSupport.generateAndPushLicenseReport()
+    def licenseReportUpdater = new LicenseReportUpdater(this, stageParams.branch, stageParams.sshCredentialsId)
+    licenseReportUpdater.gradleRuntime = stageParams.gradleRuntime
+    licenseReportUpdater.run()
   }
 }

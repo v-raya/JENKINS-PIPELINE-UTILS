@@ -13,24 +13,24 @@ class LicensingSupportUtils implements Serializable {
     '    into "${projectDir}/legal"\n' +
     '}'
 
-  static LicensingSupportType getLicensingSupportType(script) {
+  static LicensingSupportType getLicensingSupportType(pipeline) {
     def result = LicensingSupportType.NONE
-    if (ProjectUtils.hasGradleBuildFile(script)) {
-      if (script.sh(script: 'grep -c "com.github.hierynomus.license" build.gradle',
+    if (ProjectUtils.hasGradleBuildFile(pipeline)) {
+      if (pipeline.sh(script: 'grep -c "com.github.hierynomus.license" build.gradle',
         returnStatus: true) == 0) {
         result = LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE
       }
-    } else if (ProjectUtils.hasPackageJsonFile(script)) {
-      if (script.sh(script: 'grep -c "license_finder" package.json', returnStatus: true) == 0) {
+    } else if (ProjectUtils.hasPackageJsonFile(pipeline)) {
+      if (pipeline.sh(script: 'grep -c "license_finder" package.json', returnStatus: true) == 0) {
         result = LicensingSupportType.RUBY_LICENSE_FINDER
       }
     }
     result
   }
 
-  static def addLicensingGradleTasks(script) {
-    def source = script.readFile file: 'build.gradle'
+  static def addLicensingGradleTasks(pipeline) {
+    def source = pipeline.readFile file: 'build.gradle'
     source += ADDITIONAL_LICENSING_GRADLE_TASKS
-    script.writeFile file: 'build.gradle', text: "$source"
+    pipeline.writeFile file: 'build.gradle', text: "$source"
   }
 }

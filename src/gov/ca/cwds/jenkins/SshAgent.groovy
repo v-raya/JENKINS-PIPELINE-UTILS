@@ -1,18 +1,18 @@
 package gov.ca.cwds.jenkins
 
 class SshAgent implements Serializable {
-  def script
+  def pipeline
   def credentialsId
 
-  SshAgent(script, credentialsId) {
-    this.script = script
+  SshAgent(pipeline, credentialsId) {
+    this.pipeline = pipeline
     this.credentialsId = credentialsId
   }
 
-  def exec(String command, boolean failOnStatus = false) {
+  def run(String command, boolean failOnStatus = false) {
     def cmd = sshCommand(command)
-    script.sshagent(credentials: [credentialsId]) {
-      def status = script.sh(script: cmd, returnStatus: true)
+    pipeline.sshagent(credentials: [credentialsId]) {
+      def status = pipeline.sh(script: cmd, returnStatus: true)
       if (status != 0 && failOnStatus) {
         throw new Exception("ssh command '${command}' failed")
       }
