@@ -10,4 +10,4 @@ Jenkins builds for CWDS.
 * [smokeTest](docs/smokeTest.md)
 * [tagGithubRepo](docs/tagGithubRepo.md)
 * [updateManifest](docs/updateManifest.md)
-* Licensing: Please see examples of Jenkins files under [examples/licensing](examples/licensing)
+* [Licensing Support](docs/licensingSupport.md)
