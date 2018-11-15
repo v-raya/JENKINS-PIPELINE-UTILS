@@ -4,19 +4,17 @@ import gov.ca.cwds.jenkins.licensing.LicensingSupport
 import gov.ca.cwds.jenkins.utils.ProjectUtils
 import spock.lang.Specification
 
+import static gov.ca.cwds.jenkins.licensing.LicensingSupportUtils.ADDITIONAL_LICENSING_GRADLE_TASKS
 import static gov.ca.cwds.jenkins.licensing.LicensingSupportUtils.MSG_NO_LICENSING_SUPPORT
 
 class LicensingSupportSpecification extends Specification {
 
   class PipeLineScript {
-    def spec
-
-    PipeLineScript(spec) {
-      this.spec = spec
+    PipeLineScript() {
     }
 
     def sh(String script) {
-      spec.actualValues.calledShScripts.add(script)
+      actualValues.calledShScripts.add(script)
       return behaviour && behaviour.sh ? behaviour.sh[script] : 1
     }
 
@@ -25,45 +23,46 @@ class LicensingSupportSpecification extends Specification {
     }
 
     def echo(String msg) {
-      spec.actualValues.echoedMessages.add(msg)
+      actualValues.echoedMessages.add(msg)
     }
 
     def readFile(Map params) {
+      return behaviour.readFileResult
     }
 
     def writeFile(Map params) {
+      actualValues.textPassedToWriteFile = params.text
     }
 
     def sshagent(Map params, closure) {
-      spec.actualValues.usedCredentialsId = params.credentials[0]
+      actualValues.usedCredentialsId = params.credentials[0]
       closure()
     }
   }
 
   class GradleRuntime {
-    def spec
-
-    def GradleRuntime(spec) {
-      this.spec = spec
+    def GradleRuntime() {
     }
 
     def run(Map parameters) {
-      spec.actualValues.lastGradleRuntimeParameters = parameters
+      actualValues.lastGradleRuntimeParameters = parameters
     }
   }
 
   def behaviour = [
-    sh: [:] // map of script -> result values where script is a parameter of the pipeline.sh() method
+    sh: [:], // map of script -> result values where script is a parameter of the pipeline.sh() method
+    readFileResult: ''
   ]
 
   def actualValues = [
     calledShScripts            : [] as Set,
     echoedMessages             : [] as Set,
+    textPassedToWriteFile      : null,
     usedCredentialsId          : null,
     lastGradleRuntimeParameters: null
   ]
 
-  static def getSshGitCommand(String gitCommand) {
+  static def getSshGitCommand(gitCommand) {
     'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' + gitCommand
   }
 
@@ -83,7 +82,7 @@ class LicensingSupportSpecification extends Specification {
 
   // assertion methods
 
-  def isLastShScriptCalled(String expectedShScript) {
+  def isLastShScriptCalled(expectedShScript) {
     expectedShScript == actualValues.calledShScripts.last()
   }
 
@@ -91,11 +90,15 @@ class LicensingSupportSpecification extends Specification {
     expectedShScripts == actualValues.calledShScripts
   }
 
-  def isMessageEchoed(String expectedMessage) {
+  def isMessageEchoed(expectedMessage) {
     actualValues.echoedMessages.contains(expectedMessage)
   }
 
-  def isCredentialsIdUsed(String expectedCredentialsId) {
+  def isTextPassedToWriteFile(expectedText) {
+    expectedText == actualValues.textPassedToWriteFile
+  }
+
+  def isCredentialsIdUsed(expectedCredentialsId) {
     expectedCredentialsId == actualValues.usedCredentialsId
   }
 
@@ -147,7 +150,7 @@ class LicensingSupportSpecification extends Specification {
         "${SSH_GIT_CONFIG_USER}"                              : 1
       ]
     ]
-    def pipeline = new PipeLineScript(this)
+    def pipeline = new PipeLineScript()
     def sshAgent = new SshAgent(pipeline, 'credentials-id')
     def licensingSupport = new LicensingSupport(pipeline, 'master', sshAgent)
 
@@ -163,7 +166,7 @@ class LicensingSupportSpecification extends Specification {
 
   def "When build is not from the master branch then skip license report generation"() {
     given:
-    def pipeline = new PipeLineScript(this)
+    def pipeline = new PipeLineScript()
     def licensingSupport = new LicensingSupport(pipeline, 'myTempBranch', null)
 
     when:
@@ -182,10 +185,11 @@ class LicensingSupportSpecification extends Specification {
         'grep -c "com.github.hierynomus.license" build.gradle': 0,
         'test -e package.json'                                : 1,
         'grep -c "license_finder" package.json'               : 1
-      ]
+      ],
+      readFileResult: 'package gov.ca.cwds'
     ]
     setUpGitSshCommands()
-    def pipeline = new PipeLineScript(this)
+    def pipeline = new PipeLineScript()
     def sshAgent = new SshAgent(pipeline, 'credentials-id')
     def licensingSupport = new LicensingSupport(pipeline, 'master', sshAgent)
 
@@ -205,6 +209,7 @@ class LicensingSupportSpecification extends Specification {
       SSH_GIT_PUSH
     ] as Set
     areShScriptsCalled(expectedShScriptsCalled)
+    isTextPassedToWriteFile('package gov.ca.cwds' + ADDITIONAL_LICENSING_GRADLE_TASKS)
     isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')
     isMessageEchoed('Updating License Information')
@@ -218,13 +223,14 @@ class LicensingSupportSpecification extends Specification {
         'grep -c "com.github.hierynomus.license" build.gradle': 0,
         'test -e package.json'                                : 1,
         'grep -c "license_finder" package.json'               : 1
-      ]
+      ],
+      readFileResult: 'package gov.ca.cwds'
     ]
     setUpGitSshCommands()
-    def pipeline = new PipeLineScript(this)
+    def pipeline = new PipeLineScript()
     def sshAgent = new SshAgent(pipeline, 'credentials-id')
     def licensingSupport = new LicensingSupport(pipeline, 'master', sshAgent)
-    def gradleRuntime = new GradleRuntime(this)
+    def gradleRuntime = new GradleRuntime()
     licensingSupport.gradleRuntime = gradleRuntime
 
     when:
@@ -242,6 +248,7 @@ class LicensingSupportSpecification extends Specification {
       SSH_GIT_PUSH
     ] as Set
     areShScriptsCalled(expectedShScriptsCalled)
+    isTextPassedToWriteFile('package gov.ca.cwds' + ADDITIONAL_LICENSING_GRADLE_TASKS)
     areLastGradleRuntimeParameters([buildFile: 'build.gradle', tasks: 'deleteLicenses downloadLicenses copyLicenses'])
     isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')
@@ -259,7 +266,7 @@ class LicensingSupportSpecification extends Specification {
       ]
     ]
     setUpGitSshCommands()
-    def pipeline = new PipeLineScript(this)
+    def pipeline = new PipeLineScript()
     def sshAgent = new SshAgent(pipeline, 'credentials-id')
     def licensingSupport = new LicensingSupport(pipeline, 'master', sshAgent)
 
