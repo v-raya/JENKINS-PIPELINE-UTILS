@@ -7,14 +7,15 @@ class SmokeTester {
     this.script = script
   }
   
-  def runSmokeTest(path) {
-    def test = path.execute().text
-    if (test.contains("smoketest failed")) {
-        script.error ("'${test}'")
-        return "smoke test failed"
+  def runSmokeTest(path, url) {
+
+    def cmd = [path, url]
+    def test = cmd.execute().text
+    if (test.contains("smoketest passed")) {
+        script.echo "smoke test passed"
+        return "smoke test passed"
     }
-    script.echo "smoke test passed"
-    return "smoke test passed"
+    script.error ("'${test}'")
   }
   
 }

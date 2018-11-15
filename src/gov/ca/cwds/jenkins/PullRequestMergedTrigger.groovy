@@ -1,12 +1,6 @@
 package gov.ca.cwds.jenkins
 
 class PullRequestMergedTrigger {
-  def script
-
-  PullRequestMergedTrigger(script) {
-    this.script = script
-  }
-
   def triggerProperties(triggerKeyParameter) {
     [$class: 'GenericTrigger',
       genericVariables: [
