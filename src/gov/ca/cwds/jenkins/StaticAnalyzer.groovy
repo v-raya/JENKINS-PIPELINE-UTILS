@@ -6,9 +6,11 @@ import gov.ca.cwds.jenkins.common.ProjectTypes
 class StaticAnalyzer {
   Docker docker
   def script
+  def rtGradle 
 
-  StaticAnalyzer(docker, script) {
+  StaticAnalyzer(docker, rtGradle, script) {
     this.docker = docker
+    this.rtGradle = rtGradle
     this.script = script
   }
 
@@ -16,7 +18,7 @@ class StaticAnalyzer {
     def projectTypes = buildMetadata.projectTypes()
     if( projectTypes.contains(ProjectTypes.JAVA) ) {
       script.withSonarQubeEnv('Core-SonarQube') {
-			  buildInfo = rtGradle.run buildFile: 'build.gradle', switches: '--info', tasks: 'sonarqube'
+			  rtGradle.run buildFile: 'build.gradle', switches: '--info', tasks: 'sonarqube'
       }  
     }
     if( projectTypes.contains(ProjectTypes.JAVASCRIPT) ) {

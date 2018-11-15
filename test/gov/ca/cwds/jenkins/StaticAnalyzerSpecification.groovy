@@ -8,18 +8,25 @@ import gov.ca.cwds.jenkins.docker.Docker
 class StaticAnalyzerSpecification extends Specification {
 
   class PipelineScript {
-      def withSonarQubeEnv(name, closure) {
-      }
+    def withSonarQubeEnv(name, Closure closure) {
+      closure()
+    }
+  }
+
+  class Gradle {
+    def run(String buildFile, String switches, String tasks) {
+    }
   }
 
   def "#lint javascript project linted properly"() {
     given:
     def pipelineScript = Stub(PipelineScript)  
     def docker = Mock(Docker)
+    def rtGradle = new Gradle()
     def buildMetadata = Stub(BuildMetadata)
     buildMetadata.projectTypes() >> [ProjectTypes.JAVASCRIPT]
 
-    def staticAnalyzer = new StaticAnalyzer(docker, pipelineScript)
+    def staticAnalyzer = new StaticAnalyzer(docker, rtGradle, pipelineScript)
   
     when:
     staticAnalyzer.lint(buildMetadata)
@@ -32,10 +39,11 @@ class StaticAnalyzerSpecification extends Specification {
     given:
     def pipelineScript = Stub(PipelineScript)  
     def docker = Mock(Docker)
+    def rtGradle = new Gradle()
     def buildMetadata = Stub(BuildMetadata)
     buildMetadata.projectTypes() >> [ProjectTypes.RUBY]
 
-    def staticAnalyzer = new StaticAnalyzer(docker, pipelineScript)
+    def staticAnalyzer = new StaticAnalyzer(docker, rtGradle, pipelineScript)
   
     when:
     staticAnalyzer.lint(buildMetadata)
@@ -48,15 +56,16 @@ class StaticAnalyzerSpecification extends Specification {
     given:
     def pipelineScript = Mock(PipelineScript)
     def docker = Stub(Docker)
+    def rtGradle = Mock(Gradle)
     def buildMetadata = Stub(BuildMetadata)
     buildMetadata.projectTypes() >> [ProjectTypes.JAVA]
         
-    def staticAnalyzer = new StaticAnalyzer(docker, pipelineScript)
+    def staticAnalyzer = new StaticAnalyzer(docker, rtGradle, pipelineScript)
   
     when:
     staticAnalyzer.lint(buildMetadata)
 
     then:
-    1 * pipelineScript.withSonarQubeEnv('Core-SonarQube', _ as Closure)
+    1 * pipelineScript.withSonarQubeEnv('Core-SonarQube', _ as Closure)    
   }  
 }
