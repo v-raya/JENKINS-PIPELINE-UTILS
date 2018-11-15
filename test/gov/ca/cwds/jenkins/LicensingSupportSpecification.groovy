@@ -47,6 +47,14 @@ class LicensingSupportSpecification extends Specification {
         }
     }
 
+    class GradleRuntime {
+        def Map lastRunParameters
+
+        def run(Map parameters) {
+            lastRunParameters = parameters
+        }
+    }
+
     def "When can't detect LicensingSupportType then generateLicenseReport throw Exception"() {
         given:
         def pipeline = Mock(PipeLineScript)
@@ -109,6 +117,31 @@ class LicensingSupportSpecification extends Specification {
 
         then:
         pipeline.isLastShScriptCalled('./gradlew deleteLicenses downloadLicenses copyLicenses')
+        pipeline.isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
+        pipeline.isMessageEchoed('Generating License Information')
+    }
+
+    def "When a GradleRuntime is provided and it is the back-end project with gradle and it uses hierynomus license then the GradleRuntime is called to generate license report"() {
+        given:
+        def pipeline = new PipeLineScript()
+        pipeline.behaviour = [
+                sh : [
+                        'grep -c "com.github.hierynomus.license" build.gradle' : 0,
+                        'test -e build.gradle' : 0,
+                        'test -e package.json' : 1,
+                        'grep -c "license_finder" package.json' : 1
+                ]
+        ]
+        def licensingSupport = new LicensingSupport(pipeline, 'master', null)
+        def gradleRuntime = new GradleRuntime()
+        licensingSupport.gradleRuntime = gradleRuntime
+
+        when:
+        licensingSupport.generateLicenseReport()
+
+        then:
+        pipeline.isLastShScriptCalled('grep -c "com.github.hierynomus.license" build.gradle')
+        [buildFile: 'build.gradle', tasks: 'deleteLicenses downloadLicenses copyLicenses'] == gradleRuntime.lastRunParameters
         pipeline.isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
         pipeline.isMessageEchoed('Generating License Information')
     }
