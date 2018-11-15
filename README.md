@@ -6,6 +6,7 @@ Jenkins builds for CWDS.
 * [buildDockerImageForTest](docs/buildDockerImageForTest.md)
 * [checkForLabel](docs/checkForLabel.md)
 * [containerScan](docs/containerScan.md)
+* [Licensing Support](docs/licensingSupport.md)
 * [lint](docs/lint.md)
 * [newSemVer](docs/newSemVer.md)
 * [pullRequestMergedTriggerProperties](docs/pullRequestMergedTriggerProperties.md)
@@ -13,4 +14,3 @@ Jenkins builds for CWDS.
 * [smokeTest](docs/smokeTest.md)
 * [tagGithubRepo](docs/tagGithubRepo.md)
 * [updateManifest](docs/updateManifest.md)
-* [Licensing Support](docs/licensingSupport.md)
