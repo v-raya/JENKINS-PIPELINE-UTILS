@@ -25,9 +25,9 @@ node('master') {
   If the parameter is omitted for a back-end project, then the stage will try to call the `./gradlew` command.
 
 The `updateLicenseReportStage` will try to detect if it is a front-end or a back-end project
-and what plugin is used in the project for License Generation.
+and what plugin is used in the project for License Report Generation.
 If none is found then the stage will fail the build.
-Otherwise it will invoke license generation and push the changes into the project repository (if any) under the `legal` folder.
+Otherwise it will invoke License Report Generation and push the changes into the project repository (if any) under the `legal` folder.
 
-It is also possible to use the functionalty in a usual Jenkins `stage` instead of the `updateLicenseReportStage`.
+It is also possible to use the functionality in a usual Jenkins `stage` instead of the `updateLicenseReportStage`.
 Please look for more examples of Jenkins files under the [examples/licensing](../examples/licensing) directory.
