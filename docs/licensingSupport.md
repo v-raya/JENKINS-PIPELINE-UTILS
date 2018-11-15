@@ -29,6 +29,5 @@ and what plugin is used in the project for License Generation.
 If none is found then the stage will fail the build.
 Otherwise it will invoke license generation and push the changes into the project repository (if any) under the `legal` folder.
 
-## Examples
-
-Please see examples of Jenkins files under [examples/licensing](../examples/licensing)
+It is also possible to use the functionalty in a usual Jenkins `stage` instead of the `updateLicenseReportStage`.
+Please look for more examples of Jenkins files under the [examples/licensing](../examples/licensing) directory.

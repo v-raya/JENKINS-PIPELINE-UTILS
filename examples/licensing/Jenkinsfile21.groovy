@@ -17,7 +17,7 @@ node('master') {
   stage ('Update License Report') {
     def sshAgent = new gov.ca.cwds.jenkins.SshAgent(this, SSH_CRED_ID)
     def licensingSupport = new gov.ca.cwds.jenkins.licensing.LicensingSupport(this, BRANCH, sshAgent)
-    licensingSupport.gradleRuntime = rtGradleK
+    licensingSupport.gradleRuntime = rtGradle
     licensingSupport.generateAndPushLicenseReport()
   }
 }
