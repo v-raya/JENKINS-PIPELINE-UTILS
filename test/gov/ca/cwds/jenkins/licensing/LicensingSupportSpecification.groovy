@@ -1,12 +1,8 @@
-package gov.ca.cwds.jenkins
+package gov.ca.cwds.jenkins.licensing
 
-import gov.ca.cwds.jenkins.licensing.LicenseReportUpdater
-import gov.ca.cwds.jenkins.licensing.LicensingSupport
+import gov.ca.cwds.jenkins.SshAgent
 import gov.ca.cwds.jenkins.utils.ProjectUtils
 import spock.lang.Specification
-
-import static gov.ca.cwds.jenkins.licensing.LicensingSupportUtils.ADDITIONAL_LICENSING_GRADLE_TASKS
-import static gov.ca.cwds.jenkins.licensing.LicensingSupportUtils.MSG_NO_LICENSING_SUPPORT
 
 class LicensingSupportSpecification extends Specification {
 
@@ -121,7 +117,7 @@ class LicensingSupportSpecification extends Specification {
 
     then:
     def exception = thrown(Exception)
-    exception.message == MSG_NO_LICENSING_SUPPORT
+    exception.message == LicensingSupportUtils.MSG_NO_LICENSING_SUPPORT
   }
 
   def "When can't detect LicensingSupportType then pushLicenseReport throws Exception"() {
@@ -136,7 +132,7 @@ class LicensingSupportSpecification extends Specification {
 
     then:
     def exception = thrown(Exception)
-    exception.message == MSG_NO_LICENSING_SUPPORT
+    exception.message == LicensingSupportUtils.MSG_NO_LICENSING_SUPPORT
   }
 
   def "When can't execute ssh git command then pushLicenseReport throws Exception"() {
@@ -210,7 +206,7 @@ class LicensingSupportSpecification extends Specification {
       SSH_GIT_PUSH
     ] as Set
     areShScriptsCalled(expectedShScriptsCalled)
-    isTextPassedToWriteFile('package gov.ca.cwds' + ADDITIONAL_LICENSING_GRADLE_TASKS)
+    isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportUtils.ADDITIONAL_LICENSING_GRADLE_TASKS)
     isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')
     isMessageEchoed('Updating License Information')
@@ -249,7 +245,7 @@ class LicensingSupportSpecification extends Specification {
       SSH_GIT_PUSH
     ] as Set
     areShScriptsCalled(expectedShScriptsCalled)
-    isTextPassedToWriteFile('package gov.ca.cwds' + ADDITIONAL_LICENSING_GRADLE_TASKS)
+    isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportUtils.ADDITIONAL_LICENSING_GRADLE_TASKS)
     areLastGradleRuntimeParameters([buildFile: 'build.gradle', tasks: 'deleteLicenses downloadLicenses copyLicenses'])
     isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')
@@ -324,7 +320,7 @@ class LicensingSupportSpecification extends Specification {
       SSH_GIT_PUSH
     ] as Set
     areShScriptsCalled(expectedShScriptsCalled)
-    isTextPassedToWriteFile('package gov.ca.cwds' + ADDITIONAL_LICENSING_GRADLE_TASKS)
+    isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportUtils.ADDITIONAL_LICENSING_GRADLE_TASKS)
     areLastGradleRuntimeParameters([buildFile: 'build.gradle', tasks: 'deleteLicenses downloadLicenses copyLicenses'])
     isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')

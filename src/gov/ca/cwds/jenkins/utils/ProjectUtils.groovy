@@ -15,4 +15,12 @@ class ProjectUtils implements Serializable {
   }
 
   static boolean isFrontEndProject = ProjectUtils.&hasPackageJsonFile
+
+  static def processStageParameters(stageBody) {
+    def stageParams = [:]
+    stageBody.resolveStrategy = Closure.DELEGATE_FIRST
+    stageBody.delegate = stageParams
+    stageBody()
+    stageParams
+  }
 }

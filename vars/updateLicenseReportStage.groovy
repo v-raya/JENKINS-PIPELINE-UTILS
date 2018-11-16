@@ -1,6 +1,7 @@
 package gov.ca.cwds.jenkins
 
 import gov.ca.cwds.jenkins.licensing.LicenseReportUpdater
+import gov.ca.cwds.jenkins.utils.ProjectUtils
 
 /*
 Usage in Jenkins pipeline:
@@ -15,11 +16,7 @@ gradleRuntime is optional
  */
 def call(stageBody) {
   // evaluate the body block, and collect configuration into the object
-  def stageParams = [:]
-  stageBody.resolveStrategy = Closure.DELEGATE_FIRST
-  stageBody.delegate = stageParams
-  stageBody()
-
+  def stageParams = ProjectUtils.processStageParameters(stageBody)
   stage('Update License Report') {
     def licenseReportUpdater = new LicenseReportUpdater(this, stageParams.branch, stageParams.sshCredentialsId)
     licenseReportUpdater.gradleRuntime = stageParams.gradleRuntime
