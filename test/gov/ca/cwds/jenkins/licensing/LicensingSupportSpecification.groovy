@@ -1,6 +1,5 @@
 package gov.ca.cwds.jenkins.licensing
 
-import gov.ca.cwds.jenkins.SshAgent
 import gov.ca.cwds.jenkins.utils.ProjectUtils
 import spock.lang.Specification
 
@@ -105,37 +104,34 @@ class LicensingSupportSpecification extends Specification {
 
   // test methods
 
-  def "When can't detect LicensingSupportType then generateLicenseReport throws Exception"() {
+  def "When build is not from the master branch then skip license report generation"() {
+    given:
+    def pipeline = new PipeLineScript()
+    def licensingSupport = new LicensingSupport(pipeline)
+
+    when:
+    licensingSupport.updateLicenseReport('myTempBranch', 'credentials-id')
+
+    then:
+    isMessageEchoed('Not working with the master branch. Skipping Update License Report for the other branch.')
+  }
+
+  def "When can't detect LicensingSupportType then Exception is thrown"() {
     given:
     def pipeline = Mock(PipeLineScript)
-    def licensingSupport = new LicensingSupport(pipeline, 'master', null)
+    def licensingSupport = new LicensingSupport(pipeline)
     ProjectUtils.hasGradleBuildFile(pipeline) >> false
     ProjectUtils.hasPackageJsonFile(pipeline) >> false
 
     when:
-    licensingSupport.generateLicenseReport()
+    licensingSupport.updateLicenseReport('master', 'credentials-id')
 
     then:
     def exception = thrown(Exception)
     exception.message == LicensingSupportUtils.MSG_NO_LICENSING_SUPPORT
   }
 
-  def "When can't detect LicensingSupportType then pushLicenseReport throws Exception"() {
-    given:
-    def pipeline = Mock(PipeLineScript)
-    def licensingSupport = new LicensingSupport(pipeline, 'master', null)
-    ProjectUtils.hasGradleBuildFile(pipeline) >> false
-    ProjectUtils.hasPackageJsonFile(pipeline) >> false
-
-    when:
-    licensingSupport.pushLicenseReport()
-
-    then:
-    def exception = thrown(Exception)
-    exception.message == LicensingSupportUtils.MSG_NO_LICENSING_SUPPORT
-  }
-
-  def "When can't execute ssh git command then pushLicenseReport throws Exception"() {
+  def "When can't execute ssh git command then Exception is thrown"() {
     given:
     final def gitCommand = 'git config --global user.name Jenkins'
     behaviour = [
@@ -148,30 +144,16 @@ class LicensingSupportSpecification extends Specification {
       ]
     ]
     def pipeline = new PipeLineScript()
-    def sshAgent = new SshAgent(pipeline, 'credentials-id')
-    def licensingSupport = new LicensingSupport(pipeline, 'master', sshAgent)
+    def licensingSupport = new LicensingSupport(pipeline)
 
     when:
-    licensingSupport.pushLicenseReport()
+    licensingSupport.updateLicenseReport('master', 'credentials-id')
 
     then:
     isCredentialsIdUsed('credentials-id')
     isLastShScriptCalled(SSH_GIT_CONFIG_USER)
     def exception = thrown(Exception)
     exception.message == "ssh command '${gitCommand}' failed"
-  }
-
-  def "When build is not from the master branch then skip license report generation"() {
-    given:
-    def pipeline = new PipeLineScript()
-    def licensingSupport = new LicensingSupport(pipeline, 'myTempBranch', null)
-
-    when:
-    licensingSupport.generateAndPushLicenseReport()
-
-    then:
-    isMessageEchoed('Not working with the master branch. Skipping License Generation for the other branch.')
-    isMessageEchoed('Not working with the master branch. Skipping Push License Report for the other branch.')
   }
 
   def "When it is the back-end project with gradle and it uses hierynomus license then gradlew is called to generate license report"() {
@@ -187,11 +169,10 @@ class LicensingSupportSpecification extends Specification {
     ]
     setUpGitSshCommands()
     def pipeline = new PipeLineScript()
-    def sshAgent = new SshAgent(pipeline, 'credentials-id')
-    def licensingSupport = new LicensingSupport(pipeline, 'master', sshAgent)
+    def licensingSupport = new LicensingSupport(pipeline)
 
     when:
-    licensingSupport.generateAndPushLicenseReport()
+    licensingSupport.updateLicenseReport('master', 'credentials-id')
 
     then:
     isCredentialsIdUsed('credentials-id')
@@ -225,13 +206,11 @@ class LicensingSupportSpecification extends Specification {
     ]
     setUpGitSshCommands()
     def pipeline = new PipeLineScript()
-    def sshAgent = new SshAgent(pipeline, 'credentials-id')
-    def licensingSupport = new LicensingSupport(pipeline, 'master', sshAgent)
+    def licensingSupport = new LicensingSupport(pipeline)
     def gradleRuntime = new GradleRuntime()
-    licensingSupport.gradleRuntime = gradleRuntime
 
     when:
-    licensingSupport.generateAndPushLicenseReport()
+    licensingSupport.updateLicenseReport('master', 'credentials-id', gradleRuntime)
 
     then:
     isCredentialsIdUsed('credentials-id')
@@ -264,11 +243,10 @@ class LicensingSupportSpecification extends Specification {
     ]
     setUpGitSshCommands()
     def pipeline = new PipeLineScript()
-    def sshAgent = new SshAgent(pipeline, 'credentials-id')
-    def licensingSupport = new LicensingSupport(pipeline, 'master', sshAgent)
+    def licensingSupport = new LicensingSupport(pipeline)
 
     when:
-    licensingSupport.generateAndPushLicenseReport()
+    licensingSupport.updateLicenseReport('master', 'credentials-id')
 
     then:
     isCredentialsIdUsed('credentials-id')
@@ -285,44 +263,6 @@ class LicensingSupportSpecification extends Specification {
     ] as Set
     areShScriptsCalled(expectedShScriptsCalled)
     isMessageEchoed('Detected Licensing Support Type: Ruby License Finder Plugin')
-    isMessageEchoed('Generating License Information')
-    isMessageEchoed('Updating License Information')
-  }
-
-  def "When a GradleRuntime is provided and it is the back-end project with gradle and it uses hierynomus license then LicenseReportUpdater uses GradleRuntime and updates license report"() {
-    given:
-    behaviour = [
-      sh: [
-        'test -e build.gradle'                                : 0,
-        'grep -c "com.github.hierynomus.license" build.gradle': 0,
-        'test -e package.json'                                : 1,
-        'grep -c "license_finder" package.json'               : 1
-      ],
-      readFileResult: 'package gov.ca.cwds'
-    ]
-    setUpGitSshCommands()
-    def pipeline = new PipeLineScript()
-    def licenseReportUpdater = new LicenseReportUpdater(pipeline, 'master', 'credentials-id')
-    licenseReportUpdater.gradleRuntime = new GradleRuntime()
-
-    when:
-    licenseReportUpdater.run()
-
-    then:
-    isCredentialsIdUsed('credentials-id')
-    def expectedShScriptsCalled = [
-      'test -e build.gradle',
-      'grep -c "com.github.hierynomus.license" build.gradle',
-      SSH_GIT_CONFIG_USER,
-      SSH_GIT_CONFIG_EMAIL,
-      SSH_GIT_ADD_LEGAL,
-      SSH_GIT_COMMIT,
-      SSH_GIT_PUSH
-    ] as Set
-    areShScriptsCalled(expectedShScriptsCalled)
-    isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportUtils.ADDITIONAL_LICENSING_GRADLE_TASKS)
-    areLastGradleRuntimeParameters([buildFile: 'build.gradle', tasks: 'deleteLicenses downloadLicenses copyLicenses'])
-    isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')
     isMessageEchoed('Updating License Information')
   }
