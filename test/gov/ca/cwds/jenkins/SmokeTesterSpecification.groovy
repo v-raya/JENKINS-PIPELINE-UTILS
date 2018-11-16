@@ -19,7 +19,7 @@ class SmokeTesterSpecification extends Specification {
 
     given:
     def PipeLineScript pipeline = Mock(PipeLineScript)
-    pipeline.sh (_) >> "smoketest passed"
+    pipeline.sh([script: "passed test", returnStdout: true]) >> "smoketest passed"
     def smokeTester = new SmokeTester(pipeline)
 
     when:
@@ -35,7 +35,7 @@ class SmokeTesterSpecification extends Specification {
     given:
     def pipeline = Mock(PipeLineScript)
     def smokeTester = new SmokeTester(pipeline)
-    pipeline.sh (_) >> "smoketest failed"
+    pipeline.sh([script: "failed test", returnStdout: true]) >> "smoketest failed"
 
     when:
     smokeTester.runSmokeTest("failed", "test")
