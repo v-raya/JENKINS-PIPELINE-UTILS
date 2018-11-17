@@ -2,7 +2,7 @@ package gov.ca.cwds.jenkins.licensing
 
 class LicensingSupport {
   def pipeline
-  def licensingSupportType = null
+  def licensingSupportType
 
   LicensingSupport(pipeline) {
     this.pipeline = pipeline
@@ -10,7 +10,7 @@ class LicensingSupport {
 
   def updateLicenseReport(branchName, sshCredentialsId, gradleRuntime = null) {
     if ('master' == branchName) {
-      initLicensingSupportType()
+      determineLicensingSupportType()
       generateLicenseReport(gradleRuntime)
       pushLicenseReport(sshCredentialsId)
     } else {
@@ -18,7 +18,7 @@ class LicensingSupport {
     }
   }
 
-  private def initLicensingSupportType() {
+  private def determineLicensingSupportType() {
     licensingSupportType = new LicensingSupportTypeDeterminer(pipeline).determineLicensingSupportType()
     pipeline.echo("Detected Licensing Support Type: ${licensingSupportType.title}")
     if (LicensingSupportType.NONE == licensingSupportType) {
