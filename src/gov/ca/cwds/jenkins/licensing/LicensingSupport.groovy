@@ -40,7 +40,8 @@ class LicensingSupport {
       } else {
         gradleRuntime.run buildFile: 'build.gradle', tasks: 'downloadLicenses'
       }
-      pipeline.sh "mkdir ${LICENSE_FOLDER}; cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
+      pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
+      pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
       pipeline.sh 'yarn licenses-report'
     }
