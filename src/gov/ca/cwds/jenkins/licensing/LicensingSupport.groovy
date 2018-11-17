@@ -35,13 +35,12 @@ class LicensingSupport {
   private def generateLicenseReport(gradleRuntime = null) {
     pipeline.echo 'Generating License Information'
     if (licensingSupportType == LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE) {
-      // pipeline.sh "rm -Rf ${LICENSE_BUILD_FOLDER}"
       if (null == gradleRuntime) {
         pipeline.sh './gradlew downloadLicenses'
       } else {
         gradleRuntime.run buildFile: 'build.gradle', tasks: 'downloadLicenses'
       }
-      pipeline.sh "cp -R ${LICENSE_BUILD_FOLDER} ${LICENSE_FOLDER}"
+      pipeline.sh "mkdir ${LICENSE_FOLDER}; cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
       pipeline.sh 'yarn licenses-report'
     }
