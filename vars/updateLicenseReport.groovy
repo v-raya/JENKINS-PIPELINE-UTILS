@@ -1,7 +1,5 @@
 package gov.ca.cwds.jenkins
 
-import gov.ca.cwds.jenkins.licensing.LicenseReportUpdater
-
 /*
 Usage in Jenkins pipeline:
 
