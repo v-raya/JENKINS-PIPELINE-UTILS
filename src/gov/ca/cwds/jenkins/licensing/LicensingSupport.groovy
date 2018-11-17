@@ -1,6 +1,12 @@
 package gov.ca.cwds.jenkins.licensing
 
 class LicensingSupport {
+  final def GIT_USER = 'Jenkins'
+  final def GIT_EMAIL = 'cwdsdoeteam@osi.ca.gov'
+  final def LICENSE_BUILD_FOLDER = 'build/reports/license'
+  final def LICENSE_FOLDER = 'legal'
+  final def MSG_NO_LICENSING_SUPPORT = 'No known Licensing Support is found in the project'
+
   def pipeline
   def licensingSupportType
 
@@ -22,37 +28,31 @@ class LicensingSupport {
     licensingSupportType = new LicensingSupportTypeDeterminer(pipeline).determineLicensingSupportType()
     pipeline.echo("Detected Licensing Support Type: ${licensingSupportType.title}")
     if (LicensingSupportType.NONE == licensingSupportType) {
-      throw new Exception(LicensingSupportConstants.MSG_NO_LICENSING_SUPPORT)
+      throw new Exception(MSG_NO_LICENSING_SUPPORT)
     }
   }
 
   private def generateLicenseReport(gradleRuntime = null) {
     pipeline.echo 'Generating License Information'
     if (licensingSupportType == LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE) {
-      addLicensingGradleTasks(pipeline)
+      pipeline.sh "rm -Rf ${LICENSE_BUILD_FOLDER} ${LICENSE_FOLDER}"
       if (null == gradleRuntime) {
-        pipeline.sh './gradlew deleteLicenses downloadLicenses copyLicenses'
+        pipeline.sh './gradlew downloadLicenses'
       } else {
-        gradleRuntime.run buildFile: 'build.gradle',
-          tasks: 'deleteLicenses downloadLicenses copyLicenses'
+        gradleRuntime.run buildFile: 'build.gradle', tasks: 'downloadLicenses'
       }
+      pipeline.sh "cp -R ${LICENSE_BUILD_FOLDER} ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
       pipeline.sh 'yarn licenses-report'
     }
   }
 
-  private def addLicensingGradleTasks(pipeline) {
-    def source = pipeline.readFile file: 'build.gradle'
-    source += LicensingSupportConstants.ADDITIONAL_LICENSING_GRADLE_TASKS
-    pipeline.writeFile file: 'build.gradle', text: "$source"
-  }
-
   private def pushLicenseReport(sshCredentialsId) {
     pipeline.echo 'Updating License Information'
     pipeline.sshagent(credentials: [sshCredentialsId]) {
-      runSshCommand("git config --global user.name ${LicensingSupportConstants.GIT_USER}", true)
-      runSshCommand("git config --global user.email ${LicensingSupportConstants.GIT_EMAIL}", true)
-      runSshCommand("git add ${LicensingSupportConstants.LICENSE_FOLDER}")
+      runSshCommand("git config --global user.name ${GIT_USER}", true)
+      runSshCommand("git config --global user.email ${GIT_EMAIL}", true)
+      runSshCommand("git add ${LICENSE_FOLDER}")
       runSshCommand('git commit -m "updated license info"')
       runSshCommand('git push --set-upstream origin master', true)
     }
@@ -61,7 +61,7 @@ class LicensingSupport {
   private def runSshCommand(command, failOnNonZeroStatus = false) {
     // Used to avoid known_hosts addition, which would require each machine to have GitHub added in advance (maybe should do?)
     def cmd = 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' + command
-    def status = pipeline.sh(script: cmd, returnStatus: true)
+    def status = pipeline.sh script: cmd, returnStatus: true
     if (status != 0 && failOnNonZeroStatus) {
       throw new Exception("ssh command '${command}' failed")
     }

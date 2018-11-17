@@ -21,14 +21,6 @@ class LicensingSupportSpecification extends Specification {
       actualValues.echoedMessages.add(msg)
     }
 
-    def readFile(Map params) {
-      return behaviour.readFileResult
-    }
-
-    def writeFile(Map params) {
-      actualValues.textPassedToWriteFile = params.text
-    }
-
     def sshagent(Map params, closure) {
       actualValues.usedCredentialsId = params.credentials[0]
       closure()
@@ -46,13 +38,11 @@ class LicensingSupportSpecification extends Specification {
 
   def behaviour = [
     sh            : [:], // map of script -> result values where script is a parameter of the pipeline.sh() method
-    readFileResult: ''
   ]
 
   def actualValues = [
     calledShScripts            : [] as Set,
     echoedMessages             : [] as Set,
-    textPassedToWriteFile      : null,
     usedCredentialsId          : null,
     lastGradleRuntimeParameters: null
   ]
@@ -89,10 +79,6 @@ class LicensingSupportSpecification extends Specification {
     actualValues.echoedMessages.contains(expectedMessage)
   }
 
-  def isTextPassedToWriteFile(expectedText) {
-    expectedText == actualValues.textPassedToWriteFile
-  }
-
   def isCredentialsIdUsed(expectedCredentialsId) {
     expectedCredentialsId == actualValues.usedCredentialsId
   }
@@ -127,7 +113,7 @@ class LicensingSupportSpecification extends Specification {
 
     then:
     def exception = thrown(Exception)
-    exception.message == LicensingSupportConstants.MSG_NO_LICENSING_SUPPORT
+    exception.message == 'No known Licensing Support is found in the project'
   }
 
   def "When can't execute ssh git command then Exception is thrown"() {
@@ -159,8 +145,7 @@ class LicensingSupportSpecification extends Specification {
         'ls -al ./build.gradle'                               : 0,
         'grep -c "com.github.hierynomus.license" build.gradle': 0,
         'ls -al ./.ruby-version'                              : 1,
-      ],
-      readFileResult: 'package gov.ca.cwds'
+      ]
     ]
     setUpGitSshCommands()
     def pipeline = new PipeLineScript()
@@ -172,13 +157,14 @@ class LicensingSupportSpecification extends Specification {
     then:
     isCredentialsIdUsed('credentials-id')
     isShScriptCalled('grep -c "com.github.hierynomus.license" build.gradle')
-    isShScriptCalled('./gradlew deleteLicenses downloadLicenses copyLicenses')
+    isShScriptCalled('rm -Rf build/reports/license legal')
+    isShScriptCalled('./gradlew downloadLicenses')
+    isShScriptCalled('cp -R build/reports/license legal')
     isShScriptCalled(SSH_GIT_CONFIG_USER)
     isShScriptCalled(SSH_GIT_CONFIG_EMAIL)
     isShScriptCalled(SSH_GIT_ADD_LEGAL)
     isShScriptCalled(SSH_GIT_COMMIT)
     isShScriptCalled(SSH_GIT_PUSH)
-    isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportConstants.ADDITIONAL_LICENSING_GRADLE_TASKS)
     isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')
     isMessageEchoed('Updating License Information')
@@ -191,8 +177,7 @@ class LicensingSupportSpecification extends Specification {
         'ls -al ./build.gradle'                               : 0,
         'grep -c "com.github.hierynomus.license" build.gradle': 0,
         'ls -al ./.ruby-version'                              : 1,
-      ],
-      readFileResult: 'package gov.ca.cwds'
+      ]
     ]
     setUpGitSshCommands()
     def pipeline = new PipeLineScript()
@@ -210,8 +195,9 @@ class LicensingSupportSpecification extends Specification {
     isShScriptCalled(SSH_GIT_ADD_LEGAL)
     isShScriptCalled(SSH_GIT_COMMIT)
     isShScriptCalled(SSH_GIT_PUSH)
-    isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportConstants.ADDITIONAL_LICENSING_GRADLE_TASKS)
-    areLastGradleRuntimeParameters([buildFile: 'build.gradle', tasks: 'deleteLicenses downloadLicenses copyLicenses'])
+    isShScriptCalled('rm -Rf build/reports/license legal')
+    areLastGradleRuntimeParameters([buildFile: 'build.gradle', tasks: 'downloadLicenses'])
+    isShScriptCalled('cp -R build/reports/license legal')
     isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')
     isMessageEchoed('Updating License Information')
