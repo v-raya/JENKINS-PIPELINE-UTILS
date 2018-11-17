@@ -1,7 +1,5 @@
 package gov.ca.cwds.jenkins.licensing
 
-import gov.ca.cwds.jenkins.SshAgent
-
 import static gov.ca.cwds.jenkins.licensing.LicensingSupportUtils.LICENSE_FOLDER
 import static gov.ca.cwds.jenkins.licensing.LicensingSupportUtils.MSG_NO_LICENSING_SUPPORT
 import static gov.ca.cwds.jenkins.utils.ProjectUtils.GIT_EMAIL
@@ -58,13 +56,23 @@ class LicensingSupport implements Serializable {
     switch (licensingSupportType) {
       case LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE:
       case LicensingSupportType.RUBY_LICENSE_FINDER:
-        def sshAgent = new SshAgent(pipeline, sshCredentialsId)
-        sshAgent.run("git config --global user.name ${GIT_USER}", true)
-        sshAgent.run("git config --global user.email ${GIT_EMAIL}", true)
-        sshAgent.run("git add ${LICENSE_FOLDER}")
-        sshAgent.run('git commit -m "updated license info"')
-        sshAgent.run('git push --set-upstream origin master', true)
+        pipeline.sshagent(credentials: [sshCredentialsId]) {
+          runSshCommand("git config --global user.name ${GIT_USER}", true)
+          runSshCommand("git config --global user.email ${GIT_EMAIL}", true)
+          runSshCommand("git add ${LICENSE_FOLDER}")
+          runSshCommand('git commit -m "updated license info"')
+          runSshCommand('git push --set-upstream origin master', true)
+        }
         break
+    }
+  }
+
+  private def runSshCommand(command, failOnNonZeroStatus = false) {
+    // Used to avoid known_hosts addition, which would require each machine to have GitHub added in advance (maybe should do?)
+    def cmd = 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' + command
+    def status = pipeline.sh(script: cmd, returnStatus: true)
+    if (status != 0 && failOnNonZeroStatus) {
+      throw new Exception("ssh command '${command}' failed")
     }
   }
 }

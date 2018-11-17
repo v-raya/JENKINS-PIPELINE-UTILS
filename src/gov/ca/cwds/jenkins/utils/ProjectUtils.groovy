@@ -8,11 +8,7 @@ class ProjectUtils implements Serializable {
     pipeline.sh(script: 'test -e build.gradle', returnStatus: true) == 0
   }
 
-  static boolean isBackEndProject = ProjectUtils.&hasGradleBuildFile
-
   static boolean hasPackageJsonFile(pipeline) {
     pipeline.sh(script: 'test -e package.json', returnStatus: true) == 0
   }
-
-  static boolean isFrontEndProject = ProjectUtils.&hasPackageJsonFile
 }
