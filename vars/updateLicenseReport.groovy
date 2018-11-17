@@ -1,5 +1,7 @@
 package gov.ca.cwds.jenkins
 
+import gov.ca.cwds.jenkins.licensing.LicensingSupport
+
 /*
 Usage in Jenkins pipeline:
 
