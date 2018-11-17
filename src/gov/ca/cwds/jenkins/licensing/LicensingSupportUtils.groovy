@@ -1,6 +1,7 @@
 package gov.ca.cwds.jenkins.licensing
 
-import gov.ca.cwds.jenkins.utils.ProjectUtils
+import gov.ca.cwds.jenkins.common.ProjectTypes
+import gov.ca.cwds.jenkins.common.ProjectTypesDeterminer
 
 class LicensingSupportUtils implements Serializable {
   final static def LICENSE_FOLDER = 'legal'
@@ -15,12 +16,14 @@ class LicensingSupportUtils implements Serializable {
 
   static LicensingSupportType getLicensingSupportType(pipeline) {
     def result = LicensingSupportType.NONE
-    if (ProjectUtils.hasGradleBuildFile(pipeline)) {
+    def projectTypesDeterminer = new ProjectTypesDeterminer(pipeline)
+    def projectTypes = projectTypesDeterminer.determineProjectTypes('.')
+    if (projectTypes.contains(ProjectTypes.JAVA)) {
       if (pipeline.sh(script: 'grep -c "com.github.hierynomus.license" build.gradle',
         returnStatus: true) == 0) {
         result = LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE
       }
-    } else if (ProjectUtils.hasPackageJsonFile(pipeline)) {
+    } else if (projectTypes.contains(ProjectTypes.RUBY)) {
       if (pipeline.sh(script: 'grep -c "license_finder" package.json', returnStatus: true) == 0) {
         result = LicensingSupportType.RUBY_LICENSE_FINDER
       }

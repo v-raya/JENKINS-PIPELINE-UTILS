@@ -1,6 +1,5 @@
 package gov.ca.cwds.jenkins.licensing
 
-import gov.ca.cwds.jenkins.utils.ProjectUtils
 import spock.lang.Specification
 
 class LicensingSupportSpecification extends Specification {
@@ -46,7 +45,7 @@ class LicensingSupportSpecification extends Specification {
   }
 
   def behaviour = [
-    sh: [:], // map of script -> result values where script is a parameter of the pipeline.sh() method
+    sh            : [:], // map of script -> result values where script is a parameter of the pipeline.sh() method
     readFileResult: ''
   ]
 
@@ -82,8 +81,8 @@ class LicensingSupportSpecification extends Specification {
     expectedShScript == actualValues.calledShScripts.last()
   }
 
-  def areShScriptsCalled(Set expectedShScripts) {
-    expectedShScripts == actualValues.calledShScripts
+  def isShScriptCalled(expectedShScript) {
+    actualValues.calledShScripts.contains(expectedShScript)
   }
 
   def isMessageEchoed(expectedMessage) {
@@ -118,10 +117,10 @@ class LicensingSupportSpecification extends Specification {
 
   def "When can't detect LicensingSupportType then Exception is thrown"() {
     given:
-    def pipeline = Mock(PipeLineScript)
+    def pipeline = Stub(PipeLineScript)
+    pipeline.sh([script: "ls -al ./build.gradle", returnStatus: true]) >> 1
+    pipeline.sh([script: "ls -al ./.ruby-version", returnStatus: true]) >> 1
     def licensingSupport = new LicensingSupport(pipeline)
-    ProjectUtils.hasGradleBuildFile(pipeline) >> false
-    ProjectUtils.hasPackageJsonFile(pipeline) >> false
 
     when:
     licensingSupport.updateLicenseReport('master', 'credentials-id')
@@ -136,10 +135,9 @@ class LicensingSupportSpecification extends Specification {
     final def gitCommand = 'git config --global user.name Jenkins'
     behaviour = [
       sh: [
-        'test -e build.gradle'                                : 0,
+        'ls -al ./build.gradle'                                 : 0,
         'grep -c "com.github.hierynomus.license" build.gradle': 0,
-        'test -e package.json'                                : 1,
-        'grep -c "license_finder" package.json'               : 1,
+        'ls -al ./.ruby-version'                                : 1,
         "${SSH_GIT_CONFIG_USER}"                              : 1
       ]
     ]
@@ -159,11 +157,10 @@ class LicensingSupportSpecification extends Specification {
   def "When it is the back-end project with gradle and it uses hierynomus license then gradlew is called to generate license report"() {
     given:
     behaviour = [
-      sh: [
-        'test -e build.gradle'                                : 0,
+      sh            : [
+        'ls -al ./build.gradle'                                 : 0,
         'grep -c "com.github.hierynomus.license" build.gradle': 0,
-        'test -e package.json'                                : 1,
-        'grep -c "license_finder" package.json'               : 1
+        'ls -al ./.ruby-version'                                : 1,
       ],
       readFileResult: 'package gov.ca.cwds'
     ]
@@ -176,17 +173,13 @@ class LicensingSupportSpecification extends Specification {
 
     then:
     isCredentialsIdUsed('credentials-id')
-    def expectedShScriptsCalled = [
-      'test -e build.gradle',
-      'grep -c "com.github.hierynomus.license" build.gradle',
-      './gradlew deleteLicenses downloadLicenses copyLicenses',
-      SSH_GIT_CONFIG_USER,
-      SSH_GIT_CONFIG_EMAIL,
-      SSH_GIT_ADD_LEGAL,
-      SSH_GIT_COMMIT,
-      SSH_GIT_PUSH
-    ] as Set
-    areShScriptsCalled(expectedShScriptsCalled)
+    isShScriptCalled('grep -c "com.github.hierynomus.license" build.gradle')
+    isShScriptCalled('./gradlew deleteLicenses downloadLicenses copyLicenses')
+    isShScriptCalled(SSH_GIT_CONFIG_USER)
+    isShScriptCalled(SSH_GIT_CONFIG_EMAIL)
+    isShScriptCalled(SSH_GIT_ADD_LEGAL)
+    isShScriptCalled(SSH_GIT_COMMIT)
+    isShScriptCalled(SSH_GIT_PUSH)
     isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportUtils.ADDITIONAL_LICENSING_GRADLE_TASKS)
     isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')
@@ -196,11 +189,10 @@ class LicensingSupportSpecification extends Specification {
   def "When a GradleRuntime is provided and it is the back-end project with gradle and it uses hierynomus license then the GradleRuntime is called to generate license report"() {
     given:
     behaviour = [
-      sh: [
-        'test -e build.gradle'                                : 0,
+      sh            : [
+        'ls -al ./build.gradle'                                 : 0,
         'grep -c "com.github.hierynomus.license" build.gradle': 0,
-        'test -e package.json'                                : 1,
-        'grep -c "license_finder" package.json'               : 1
+        'ls -al ./.ruby-version'                                : 1,
       ],
       readFileResult: 'package gov.ca.cwds'
     ]
@@ -214,16 +206,12 @@ class LicensingSupportSpecification extends Specification {
 
     then:
     isCredentialsIdUsed('credentials-id')
-    def expectedShScriptsCalled = [
-      'test -e build.gradle',
-      'grep -c "com.github.hierynomus.license" build.gradle',
-      SSH_GIT_CONFIG_USER,
-      SSH_GIT_CONFIG_EMAIL,
-      SSH_GIT_ADD_LEGAL,
-      SSH_GIT_COMMIT,
-      SSH_GIT_PUSH
-    ] as Set
-    areShScriptsCalled(expectedShScriptsCalled)
+    isShScriptCalled('grep -c "com.github.hierynomus.license" build.gradle')
+    isShScriptCalled(SSH_GIT_CONFIG_USER)
+    isShScriptCalled(SSH_GIT_CONFIG_EMAIL)
+    isShScriptCalled(SSH_GIT_ADD_LEGAL)
+    isShScriptCalled(SSH_GIT_COMMIT)
+    isShScriptCalled(SSH_GIT_PUSH)
     isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportUtils.ADDITIONAL_LICENSING_GRADLE_TASKS)
     areLastGradleRuntimeParameters([buildFile: 'build.gradle', tasks: 'deleteLicenses downloadLicenses copyLicenses'])
     isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
@@ -235,9 +223,8 @@ class LicensingSupportSpecification extends Specification {
     given:
     behaviour = [
       sh: [
-        'test -e build.gradle'                                : 1,
-        'grep -c "com.github.hierynomus.license" build.gradle': 1,
-        'test -e package.json'                                : 0,
+        'ls -al ./build.gradle'                                : 1,
+        'ls -al ./.ruby-version'                                : 0,
         'grep -c "license_finder" package.json'               : 0
       ]
     ]
@@ -250,18 +237,13 @@ class LicensingSupportSpecification extends Specification {
 
     then:
     isCredentialsIdUsed('credentials-id')
-    def expectedShScriptsCalled = [
-      'test -e build.gradle',
-      'test -e package.json',
-      'grep -c "license_finder" package.json',
-      'yarn licenses-report',
-      SSH_GIT_CONFIG_USER,
-      SSH_GIT_CONFIG_EMAIL,
-      SSH_GIT_ADD_LEGAL,
-      SSH_GIT_COMMIT,
-      SSH_GIT_PUSH
-    ] as Set
-    areShScriptsCalled(expectedShScriptsCalled)
+    isShScriptCalled('grep -c "license_finder" package.json')
+    isShScriptCalled('yarn licenses-report')
+    isShScriptCalled(SSH_GIT_CONFIG_USER)
+    isShScriptCalled(SSH_GIT_CONFIG_EMAIL)
+    isShScriptCalled(SSH_GIT_ADD_LEGAL)
+    isShScriptCalled(SSH_GIT_COMMIT)
+    isShScriptCalled(SSH_GIT_PUSH)
     isMessageEchoed('Detected Licensing Support Type: Ruby License Finder Plugin')
     isMessageEchoed('Generating License Information')
     isMessageEchoed('Updating License Information')

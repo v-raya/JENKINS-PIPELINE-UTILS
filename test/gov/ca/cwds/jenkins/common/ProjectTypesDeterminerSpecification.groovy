@@ -41,7 +41,7 @@ class ProjectTypesDeterminerSpecification extends Specification {
   def "#determineProjectTypes determines ruby correctly"() {
     given:
     def pipelineScript = Stub(PipelineScript)
-    pipelineScript.sh([script: "ls -al RubyProject/.rubocop.yml", returnStatus: true]) >> 0
+    pipelineScript.sh([script: "ls -al RubyProject/.ruby-version", returnStatus: true]) >> 0
 
     def projectTypesDeterminer = new ProjectTypesDeterminer(pipelineScript)
     
@@ -55,7 +55,7 @@ class ProjectTypesDeterminerSpecification extends Specification {
   def "#determineProjectTypes determines ruby and javascriopt correctly"() {
     given:
     def pipelineScript = Stub(PipelineScript)
-    pipelineScript.sh([script: "ls -al RubyAndJavascriptProject/.rubocop.yml", returnStatus: true]) >> 0
+    pipelineScript.sh([script: "ls -al RubyAndJavascriptProject/.ruby-version", returnStatus: true]) >> 0
     pipelineScript.sh([script: "ls -al RubyAndJavascriptProject/.eslintrc", returnStatus: true]) >> 0
 
     def projectTypesDeterminer = new ProjectTypesDeterminer(pipelineScript)

@@ -2,10 +2,11 @@ package gov.ca.cwds.jenkins.licensing
 
 import static gov.ca.cwds.jenkins.licensing.LicensingSupportUtils.LICENSE_FOLDER
 import static gov.ca.cwds.jenkins.licensing.LicensingSupportUtils.MSG_NO_LICENSING_SUPPORT
-import static gov.ca.cwds.jenkins.utils.ProjectUtils.GIT_EMAIL
-import static gov.ca.cwds.jenkins.utils.ProjectUtils.GIT_USER
 
-class LicensingSupport implements Serializable {
+class LicensingSupport {
+  def GIT_USER = 'Jenkins'
+  def GIT_EMAIL = 'cwdsdoeteam@osi.ca.gov'
+
   def pipeline
   def licensingSupportType = null
 

@@ -3,7 +3,7 @@ package gov.ca.cwds.jenkins.common
 class ProjectTypesDeterminer {
   def script
 
-  def LINT_CONFIGS_RUBY = '.rubocop.yml'
+  def LINT_CONFIGS_RUBY = '.ruby-version'
   def LINT_CONFIGS_JAVASCRIPT = '.eslintrc'
   def LINT_CONFIGS_JAVA = 'build.gradle' 
 
