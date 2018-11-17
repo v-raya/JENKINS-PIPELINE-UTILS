@@ -57,15 +57,15 @@ class LicensingSupportSpecification extends Specification {
     lastGradleRuntimeParameters: null
   ]
 
-  static def getSshGitCommand(gitCommand) {
+  def getSshGitCommand(gitCommand) {
     'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' + gitCommand
   }
 
-  final static def SSH_GIT_CONFIG_USER = getSshGitCommand('git config --global user.name Jenkins')
-  final static def SSH_GIT_CONFIG_EMAIL = getSshGitCommand('git config --global user.email cwdsdoeteam@osi.ca.gov')
-  final static def SSH_GIT_ADD_LEGAL = getSshGitCommand('git add legal')
-  final static def SSH_GIT_COMMIT = getSshGitCommand('git commit -m "updated license info"')
-  final static def SSH_GIT_PUSH = getSshGitCommand('git push --set-upstream origin master')
+  final def SSH_GIT_CONFIG_USER = getSshGitCommand('git config --global user.name Jenkins')
+  final def SSH_GIT_CONFIG_EMAIL = getSshGitCommand('git config --global user.email cwdsdoeteam@osi.ca.gov')
+  final def SSH_GIT_ADD_LEGAL = getSshGitCommand('git add legal')
+  final def SSH_GIT_COMMIT = getSshGitCommand('git commit -m "updated license info"')
+  final def SSH_GIT_PUSH = getSshGitCommand('git push --set-upstream origin master')
 
   def setUpGitSshCommands() {
     behaviour.sh[SSH_GIT_CONFIG_USER] = 0
@@ -127,7 +127,7 @@ class LicensingSupportSpecification extends Specification {
 
     then:
     def exception = thrown(Exception)
-    exception.message == LicensingSupportUtils.MSG_NO_LICENSING_SUPPORT
+    exception.message == LicensingSupportConstants.MSG_NO_LICENSING_SUPPORT
   }
 
   def "When can't execute ssh git command then Exception is thrown"() {
@@ -135,9 +135,9 @@ class LicensingSupportSpecification extends Specification {
     final def gitCommand = 'git config --global user.name Jenkins'
     behaviour = [
       sh: [
-        'ls -al ./build.gradle'                                 : 0,
+        'ls -al ./build.gradle'                               : 0,
         'grep -c "com.github.hierynomus.license" build.gradle': 0,
-        'ls -al ./.ruby-version'                                : 1,
+        'ls -al ./.ruby-version'                              : 1,
         "${SSH_GIT_CONFIG_USER}"                              : 1
       ]
     ]
@@ -148,8 +148,6 @@ class LicensingSupportSpecification extends Specification {
     licensingSupport.updateLicenseReport('master', 'credentials-id')
 
     then:
-    isCredentialsIdUsed('credentials-id')
-    isLastShScriptCalled(SSH_GIT_CONFIG_USER)
     def exception = thrown(Exception)
     exception.message == "ssh command '${gitCommand}' failed"
   }
@@ -158,9 +156,9 @@ class LicensingSupportSpecification extends Specification {
     given:
     behaviour = [
       sh            : [
-        'ls -al ./build.gradle'                                 : 0,
+        'ls -al ./build.gradle'                               : 0,
         'grep -c "com.github.hierynomus.license" build.gradle': 0,
-        'ls -al ./.ruby-version'                                : 1,
+        'ls -al ./.ruby-version'                              : 1,
       ],
       readFileResult: 'package gov.ca.cwds'
     ]
@@ -180,7 +178,7 @@ class LicensingSupportSpecification extends Specification {
     isShScriptCalled(SSH_GIT_ADD_LEGAL)
     isShScriptCalled(SSH_GIT_COMMIT)
     isShScriptCalled(SSH_GIT_PUSH)
-    isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportUtils.ADDITIONAL_LICENSING_GRADLE_TASKS)
+    isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportConstants.ADDITIONAL_LICENSING_GRADLE_TASKS)
     isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')
     isMessageEchoed('Updating License Information')
@@ -190,9 +188,9 @@ class LicensingSupportSpecification extends Specification {
     given:
     behaviour = [
       sh            : [
-        'ls -al ./build.gradle'                                 : 0,
+        'ls -al ./build.gradle'                               : 0,
         'grep -c "com.github.hierynomus.license" build.gradle': 0,
-        'ls -al ./.ruby-version'                                : 1,
+        'ls -al ./.ruby-version'                              : 1,
       ],
       readFileResult: 'package gov.ca.cwds'
     ]
@@ -212,7 +210,7 @@ class LicensingSupportSpecification extends Specification {
     isShScriptCalled(SSH_GIT_ADD_LEGAL)
     isShScriptCalled(SSH_GIT_COMMIT)
     isShScriptCalled(SSH_GIT_PUSH)
-    isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportUtils.ADDITIONAL_LICENSING_GRADLE_TASKS)
+    isTextPassedToWriteFile('package gov.ca.cwds' + LicensingSupportConstants.ADDITIONAL_LICENSING_GRADLE_TASKS)
     areLastGradleRuntimeParameters([buildFile: 'build.gradle', tasks: 'deleteLicenses downloadLicenses copyLicenses'])
     isMessageEchoed('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
     isMessageEchoed('Generating License Information')
@@ -223,9 +221,9 @@ class LicensingSupportSpecification extends Specification {
     given:
     behaviour = [
       sh: [
-        'ls -al ./build.gradle'                                : 1,
-        'ls -al ./.ruby-version'                                : 0,
-        'grep -c "license_finder" package.json'               : 0
+        'ls -al ./build.gradle'                : 1,
+        'ls -al ./.ruby-version'               : 0,
+        'grep -c "license_finder" package.json': 0
       ]
     ]
     setUpGitSshCommands()
