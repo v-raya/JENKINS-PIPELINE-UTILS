@@ -14,10 +14,10 @@ class LicensingSupport {
     this.pipeline = pipeline
   }
 
-  def updateLicenseReport(branchName, sshCredentialsId, gradleRuntime = null) {
+  def updateLicenseReport(branchName, sshCredentialsId, runtimeGradle = null) {
     if ('master' == branchName) {
       determineLicensingSupportType()
-      generateLicenseReport(gradleRuntime)
+      generateLicenseReport(runtimeGradle)
       pushLicenseReport(sshCredentialsId)
     } else {
       pipeline.echo 'Not working with the master branch. Skipping Update License Report for the other branch.'
@@ -32,13 +32,13 @@ class LicensingSupport {
     }
   }
 
-  private def generateLicenseReport(gradleRuntime = null) {
+  private def generateLicenseReport(runtimeGradle = null) {
     pipeline.echo 'Generating License Information'
     if (licensingSupportType == LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE) {
-      if (null == gradleRuntime) {
+      if (null == runtimeGradle) {
         pipeline.sh './gradlew downloadLicenses'
       } else {
-        gradleRuntime.run buildFile: 'build.gradle', tasks: 'downloadLicenses'
+        runtimeGradle.run buildFile: 'build.gradle', tasks: 'downloadLicenses'
       }
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"

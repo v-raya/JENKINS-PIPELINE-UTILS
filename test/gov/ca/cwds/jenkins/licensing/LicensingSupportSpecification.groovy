@@ -17,8 +17,8 @@ class LicensingSupportSpecification extends Specification {
     def echo(String) {}
   }
 
-  class GradleRuntime {
-    GradleRuntime() {
+  class RuntimeGradle {
+    RuntimeGradle() {
     }
 
     def run(map) {
@@ -147,7 +147,7 @@ class LicensingSupportSpecification extends Specification {
     1 * pipeline.echo('Updating License Information')
   }
 
-  def "When licensing support is asked to update license report for a back-end project with gradle hierynomus license plugin and it GradleRuntime is provided then the GradleRuntime is used to generate license report"() {
+  def "When licensing support is asked to update license report for a back-end project with gradle hierynomus license plugin and it RuntimeGradle is provided then the GradleRuntime is used to generate license report"() {
     given: 'a pipeline'
     def pipeline = Mock(PipeLineScript)
 
@@ -162,17 +162,17 @@ class LicensingSupportSpecification extends Specification {
     pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git config --global user.email cwdsdoeteam@osi.ca.gov', returnStatus: true]) >> 0
     pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git push --set-upstream origin master', returnStatus: true]) >> 0
 
-    and: 'gradle runtime is provided'
-    def gradleRuntime = Mock(GradleRuntime)
+    and: 'runtime gradle is provided'
+    def runtimeGradle = Mock(RuntimeGradle)
 
     and: 'a licensing support instance which is the class under test'
     def licensingSupport = new LicensingSupport(pipeline)
 
     when: 'it is asked to update the license report for the master branch'
-    licensingSupport.updateLicenseReport('master', 'credentials-id', gradleRuntime)
+    licensingSupport.updateLicenseReport('master', 'credentials-id', runtimeGradle)
 
-    then: 'Hierynomus License gradle plugin is invoked using the provided gradle runtime'
-    1 * gradleRuntime.run([buildFile: 'build.gradle', tasks: 'downloadLicenses'])
+    then: 'Hierynomus License gradle plugin is invoked using the provided runtime gradle'
+    1 * runtimeGradle.run([buildFile: 'build.gradle', tasks: 'downloadLicenses'])
     0 * pipeline.sh('./gradlew downloadLicenses')
     0 * pipeline.sh('yarn licenses-report')
 
