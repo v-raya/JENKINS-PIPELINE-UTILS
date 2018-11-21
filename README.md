@@ -12,4 +12,5 @@ Jenkins builds for CWDS.
 * [removeDockerImageForTest](docs/removeDockerImageForTest.md)
 * [smokeTest](docs/smokeTest.md)
 * [tagGithubRepo](docs/tagGithubRepo.md)
+* [updateLicenseReport](docs/updateLicenseReport.md)
 * [updateManifest](docs/updateManifest.md)
