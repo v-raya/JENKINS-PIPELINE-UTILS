@@ -16,9 +16,25 @@ it is not changed from the UI.
 
 ```groovy
 node('linux') {
-  triggerProperties = pullRequestMergedTriggerProperties('EHAqns5oYtCb')
+  triggerProperties = pullRequestMergedTriggerProperties('dashboard-master')
   properties([
     pipelineTriggers([triggerProperties])
   ])
 }
 ```
+
+## Configuration
+
+In order to setup this up, you will need to have a Github webook configured with the following properies:
+
+Payload URL: http://jen-proxy.dev.cwds.io/generic-webhook-trigger/invoke?trigger_key=dashboard-master&token=dashboard-master
+Content type: application/json
+Events: Individual events > Pull Requests
+
+On the Jenkins side the first time you setup you will need to configure the `trigger_key` and `token` in the Jenkins UI:
+
+Under Generic Webhook Trigger add the following fields:
+
+Token: dashboard-master
+Expression: ^closed:dashboard-master:true$
+Text: $pull_request_action:$trigger_key:$pull_request_merged
