@@ -13,6 +13,6 @@ class PullRequestMergedTriggerSpecification extends Specification {
     then:
     properties['$class'] == 'GenericTrigger'
     properties['regexpFilterExpression'] == '^closed:triggerKeyParameter:true$'
-    properties['token'] == '23517621-5827-4792-8676-e8a27f2e34f1'
+    properties['token'] == 'triggerKeyParameter'
   }
 }

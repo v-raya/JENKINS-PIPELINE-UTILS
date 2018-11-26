@@ -11,10 +11,10 @@ class PullRequestMergedTrigger {
       genericRequestVariables: [
         [key: 'trigger_key']
       ],
-      token: '23517621-5827-4792-8676-e8a27f2e34f1',
+      token: "$triggerKeyParameter",
       regexpFilterText: '$pull_request_action:$trigger_key:$pull_request_merged',
       regexpFilterExpression: '^closed:' + triggerKeyParameter + ':true$',
-      causeString: 'Triggered by PR merge',
+      causeString: 'Triggered by a PR merge',
       printContributedVariables: false
     ]
   }
