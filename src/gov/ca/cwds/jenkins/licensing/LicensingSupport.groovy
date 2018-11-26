@@ -1,5 +1,8 @@
 package gov.ca.cwds.jenkins.licensing
 
+import gov.ca.cwds.jenkins.common.BuildMetadata
+import gov.ca.cwds.jenkins.docker.Docker
+
 class LicensingSupport {
   final def GIT_USER = 'Jenkins'
   final def GIT_EMAIL = 'cwdsdoeteam@osi.ca.gov'
@@ -8,31 +11,25 @@ class LicensingSupport {
   final def MSG_NO_LICENSING_SUPPORT = 'No known Licensing Support is found in the project'
 
   def pipeline
-  def licensingSupportType
+  def runtimeGradle
 
-  LicensingSupport(pipeline) {
+  LicensingSupport(pipeline, runtimeGradle = null) {
     this.pipeline = pipeline
+    this.runtimeGradle = runtimeGradle
   }
 
-  def updateLicenseReport(branchName, sshCredentialsId, runtimeGradle = null) {
+  def updateLicenseReport(branchName, sshCredentialsId) {
     if ('master' == branchName) {
-      determineLicensingSupportType()
-      generateLicenseReport(runtimeGradle)
+      generateLicenseReport()
       pushLicenseReport(sshCredentialsId)
     } else {
       pipeline.echo 'Not working with the master branch. Skipping Update License Report for the other branch.'
     }
   }
 
-  private def determineLicensingSupportType() {
-    licensingSupportType = new LicensingSupportTypeDeterminer(pipeline).determineLicensingSupportType()
+  private def generateLicenseReport() {
+    def licensingSupportType = new LicensingSupportTypeDeterminer(pipeline).determineLicensingSupportType()
     pipeline.echo("Detected Licensing Support Type: ${licensingSupportType.title}")
-    if (LicensingSupportType.NONE == licensingSupportType) {
-      throw new Exception(MSG_NO_LICENSING_SUPPORT)
-    }
-  }
-
-  private def generateLicenseReport(runtimeGradle = null) {
     pipeline.echo 'Generating License Information'
     if (licensingSupportType == LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE) {
       if (null == runtimeGradle) {
@@ -43,7 +40,11 @@ class LicensingSupport {
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
-      pipeline.sh 'yarn licenses-report'
+      def buildMetadata = new BuildMetadata(pipeline, pipeline.env.JOB_NAME, pipeline.env.BUILD_ID, pipeline.env.WORKSPACE)
+      def docker = new Docker(pipeline)
+      docker.withTestingImage('yarn licenses-report', buildMetadata)
+    } else {
+      throw new Exception(MSG_NO_LICENSING_SUPPORT)
     }
   }
 
