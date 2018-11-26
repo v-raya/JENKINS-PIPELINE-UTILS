@@ -12,10 +12,12 @@ class LicensingSupport {
 
   def pipeline
   def runtimeGradle
+  def buildMetadata
 
   LicensingSupport(pipeline, runtimeGradle = null) {
     this.pipeline = pipeline
     this.runtimeGradle = runtimeGradle
+    this.buildMetadata = new BuildMetadata(pipeline, pipeline.env.JOB_NAME, pipeline.env.BUILD_ID, pipeline.env.WORKSPACE)
   }
 
   def updateLicenseReport(branchName, sshCredentialsId) {
@@ -28,9 +30,9 @@ class LicensingSupport {
   }
 
   private def generateLicenseReport() {
-    def licensingSupportType = new LicensingSupportTypeDeterminer(pipeline).determineLicensingSupportType()
+    def licensingSupportType = new LicensingSupportTypeDeterminer(pipeline).determineLicensingSupportType(buildMetadata)
     pipeline.echo("Detected Licensing Support Type: ${licensingSupportType.title}")
-    pipeline.echo 'Generating License Information'
+    pipeline.echo 'Generating License Information...'
     if (licensingSupportType == LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE) {
       if (null == runtimeGradle) {
         pipeline.sh './gradlew downloadLicenses'
@@ -40,7 +42,6 @@ class LicensingSupport {
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
-      def buildMetadata = new BuildMetadata(pipeline, pipeline.env.JOB_NAME, pipeline.env.BUILD_ID, pipeline.env.WORKSPACE)
       def docker = new Docker(pipeline)
       docker.withTestingImage('yarn licenses-report', buildMetadata)
     } else {
