@@ -45,7 +45,7 @@ class LicensingSupport {
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
 
 
-      def checkedOutBranchName = pipeline.sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+      def checkedOutBranchName = pipeline.sh(script: "git branch | grep \\* | cut -d ' ' -f2", returnStdout: true).trim()
       pipeline.echo "checkedOutBranchName: ${checkedOutBranchName}"
 
       dockerImage.withRun("-e CI=true") { container ->
