@@ -44,7 +44,7 @@ class LicensingSupport {
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
       dockerImage.withRun("-e CI=true") { container ->
-        sh "docker exec -t ${container.id} yarn licenses-report"
+        pipeline.sh "docker exec -t ${container.id} yarn licenses-report"
       }
     } else {
       throw new Exception(MSG_NO_LICENSING_SUPPORT)
