@@ -11,7 +11,7 @@ stage('Update License Report') {
 
 gradleRuntime is optional
  */
-def call(branchName, sshCredentialsId, runtimeGradle = null) {
-  def licensingSupport = new LicensingSupport(this, runtimeGradle)
+def call(branchName, sshCredentialsId, runtimeGradle = null, dockerImage = null) {
+  def licensingSupport = new LicensingSupport(this, runtimeGradle, dockerImage)
   licensingSupport.updateLicenseReport(branchName, sshCredentialsId)
 }

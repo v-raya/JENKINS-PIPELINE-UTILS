@@ -1,7 +1,6 @@
 package gov.ca.cwds.jenkins.licensing
 
 import gov.ca.cwds.jenkins.common.BuildMetadata
-import gov.ca.cwds.jenkins.docker.Docker
 
 class LicensingSupport {
   final def GIT_USER = 'Jenkins'
@@ -12,11 +11,13 @@ class LicensingSupport {
 
   def pipeline
   def runtimeGradle
+  def dockerImage
   def buildMetadata
 
-  LicensingSupport(pipeline, runtimeGradle = null) {
+  LicensingSupport(pipeline, runtimeGradle = null, dockerImage = null) {
     this.pipeline = pipeline
     this.runtimeGradle = runtimeGradle
+    this.dockerImage = dockerImage
     this.buildMetadata = new BuildMetadata(pipeline, pipeline.env.JOB_NAME, pipeline.env.BUILD_ID, pipeline.env.WORKSPACE)
   }
 
@@ -42,8 +43,9 @@ class LicensingSupport {
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
-      def docker = new Docker(pipeline)
-      docker.withTestingImage('yarn licenses-report', buildMetadata)
+      dockerImage.withRun("-e CI=true") { container ->
+        sh "docker exec -t ${container.id} yarn licenses-report"
+      }
     } else {
       throw new Exception(MSG_NO_LICENSING_SUPPORT)
     }
