@@ -43,6 +43,11 @@ class LicensingSupport {
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
+
+
+      def checkedOutBranchName = pipeline.sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+      pipeline.echo "checkedOutBranchName: ${checkedOutBranchName}"
+
       dockerImage.withRun("-e CI=true") { container ->
         pipeline.sh "docker exec -t ${container.id} yarn licenses-report"
       }
