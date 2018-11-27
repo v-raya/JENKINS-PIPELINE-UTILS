@@ -31,7 +31,7 @@ class LicensingSupport {
 
   private def generateLicenseReport() {
     def licensingSupportType = new LicensingSupportTypeDeterminer(pipeline).determineLicensingSupportType(buildMetadata)
-    pipeline.echo("Detected Licensing Support Type: ${licensingSupportType.title}")
+    pipeline.echo "Detected Licensing Support Type: ${licensingSupportType.title}"
     pipeline.echo 'Generating License Information...'
     if (licensingSupportType == LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE) {
       if (null == runtimeGradle) {

@@ -13,5 +13,5 @@ gradleRuntime is optional
  */
 def call(branchName, sshCredentialsId, runtimeGradle = null) {
   def licensingSupport = new LicensingSupport(this, runtimeGradle)
-  licensingSupport.updateLicenseReport(branchName, sshCredentialsId, )
+  licensingSupport.updateLicenseReport(branchName, sshCredentialsId)
 }
