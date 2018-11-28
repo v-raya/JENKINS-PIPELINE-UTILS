@@ -43,11 +43,6 @@ class LicensingSupport {
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
-
-
-      def checkedOutBranchName = pipeline.sh(script: "git branch | grep \\* | cut -d ' ' -f2", returnStdout: true).trim()
-      pipeline.echo "checkedOutBranchName: ${checkedOutBranchName}"
-
       dockerImage.withRun("-e CI=true") { container ->
         pipeline.sh "docker exec -t ${container.id} yarn licenses-report"
       }
@@ -63,7 +58,8 @@ class LicensingSupport {
       runSshCommand("git config --global user.email ${GIT_EMAIL}", true)
       runSshCommand("git add ${LICENSE_FOLDER}")
       runSshCommand('git commit -m "updated license info"')
-      runSshCommand('git push --set-upstream origin master', true)
+      // runSshCommand('git push --set-upstream origin master', true)
+      runSshCommand('git push --set-upstream origin FIT-229', true)
     }
   }
 
