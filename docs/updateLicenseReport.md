@@ -5,16 +5,20 @@
 ### Usage in a back-end project
 
 ```groovy
+def rtGradle = Artifactory.newGradleBuild()
+...
 stage('Update License Report') {
-  updateLicenseReport(branch, sshCredentialsId, runtimeGradle)
+  updateLicenseReport(branch, sshCredentialsId, [runtimeGradle: rtGradle])
 }
 ```
 
 ### Usage in a front-end project
 
 ```groovy
+def app = docker.build("cwds/dashboard:${env.BUILD_ID}")
+...
 stage('Update License Report') {
-  updateLicenseReport(branch, sshCredentialsId, null, dockerImage)
+  updateLicenseReport(branch, sshCredentialsId, [dockerImage: app])
 }
 ```
 
