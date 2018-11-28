@@ -40,10 +40,13 @@ class LicensingSupport {
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
+      def LICENSES_FILE = "${LICENSE_FOLDER}/licenses.csv"
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
-      pipeline.sh "touch ${LICENSE_FOLDER}/licenses.csv"
       dockerImage.withRun("-e CI=true") { container ->
+        pipeline.sh script: "docker exec -t ${container.id} mkdir ${LICENSE_FOLDER}", returnStatus: true
+        pipeline.sh "docker exec -t ${container.id} touch ${LICENSES_FILE}"
         pipeline.sh "docker exec -t ${container.id} yarn licenses-report"
+        pipeline.sh "docker cp ${container.id}:${LICENSES_FILE} ${LICENSES_FILE}"
       }
     } else {
       throw new Exception(MSG_NO_LICENSING_SUPPORT)
