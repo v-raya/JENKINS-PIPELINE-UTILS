@@ -46,8 +46,8 @@ class LicensingSupport {
         pipeline.sh script: "docker exec -t ${container.id} mkdir ${LICENSE_FOLDER}", returnStatus: true
         //pipeline.sh "docker exec -t ${container.id} touch ${LICENSES_FILE}"
         pipeline.sh "docker exec -t ${container.id} yarn licenses-report"
-        pipeline.echo(pipeline.sh(script: "docker exec -t ${container.id} pwd", returnOutput: true))
-        pipeline.sh "docker cp ${container.id}:./${LICENSES_FILE} ${LICENSES_FILE}"
+        //pipeline.echo(pipeline.sh(script: "docker exec -t ${container.id} pwd", returnOutput: true))
+        pipeline.sh "docker cp ${container.id}:/dashboard/${LICENSES_FILE} ${LICENSES_FILE}"
       }
     } else {
       throw new Exception(MSG_NO_LICENSING_SUPPORT)
