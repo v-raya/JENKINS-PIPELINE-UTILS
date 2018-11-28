@@ -55,20 +55,21 @@ class LicensingSupport {
   private def pushLicenseReport(sshCredentialsId) {
     pipeline.echo 'Updating License Information'
     pipeline.sshagent(credentials: [sshCredentialsId]) {
-      runSshCommand("git config --global user.name ${GIT_USER}", true)
-      runSshCommand("git config --global user.email ${GIT_EMAIL}", true)
-      runSshCommand("git add ${LICENSE_FOLDER}")
-      runSshCommand('git commit -m "updated license info"')
-      runSshCommand('git push origin master', true)
+      runGitSshCommand("git config --global user.name ${GIT_USER}", true)
+      runGitSshCommand("git config --global user.email ${GIT_EMAIL}", true)
+      runGitSshCommand("git add ${LICENSE_FOLDER}")
+      runGitSshCommand('git commit -m "updated license info"')
+      //runGitSshCommand('git push origin master', true)
+      pipeline.sh 'git push origin master'
     }
   }
 
-  private def runSshCommand(command, failOnNonZeroStatus = false) {
+  private def runGitSshCommand(command, failOnNonZeroStatus = false) {
     // Used to avoid known_hosts addition, which would require each machine to have GitHub added in advance (maybe should do?)
     def cmd = 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' + command
     def status = pipeline.sh script: cmd, returnStatus: true
     if (status != 0 && failOnNonZeroStatus) {
-      throw new Exception("ssh command '${command}' failed")
+      throw new Exception("command '${command}' failed")
     }
   }
 }
