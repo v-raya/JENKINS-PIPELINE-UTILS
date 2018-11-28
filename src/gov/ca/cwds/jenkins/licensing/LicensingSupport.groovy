@@ -43,6 +43,7 @@ class LicensingSupport {
       def LICENSES_FILE = "${LICENSE_FOLDER}/licenses.csv"
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
       dockerImage.withRun("-e CI=true") { container ->
+        pipeline.echo("************** " + container.toString())
         pipeline.sh script: "docker exec -t ${container.id} mkdir ${LICENSE_FOLDER}", returnStatus: true
         //pipeline.sh "docker exec -t ${container.id} touch ${LICENSES_FILE}"
         pipeline.sh "docker exec -t ${container.id} yarn licenses-report"
