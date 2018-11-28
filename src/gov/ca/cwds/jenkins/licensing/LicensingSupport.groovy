@@ -60,9 +60,9 @@ class LicensingSupport {
       runGitSshCommand("git add ${LICENSE_FOLDER}")
       runGitSshCommand('git commit -m "updated license info"')
 
-      runGitSshCommand('git branch -a', true)
+      //runGitSshCommand('git branch -a', true)
       
-      runGitSshCommand('git push origin master', true)
+      runGitSshCommand('git push origin HEAD:master', true)
     }
   }
 
