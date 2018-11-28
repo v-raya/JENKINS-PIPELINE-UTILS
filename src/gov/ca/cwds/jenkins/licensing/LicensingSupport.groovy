@@ -1,7 +1,5 @@
 package gov.ca.cwds.jenkins.licensing
 
-import gov.ca.cwds.jenkins.common.BuildMetadata
-
 class LicensingSupport {
   final def GIT_USER = 'Jenkins'
   final def GIT_EMAIL = 'cwdsdoeteam@osi.ca.gov'
@@ -12,28 +10,27 @@ class LicensingSupport {
   def pipeline
   def runtimeGradle
   def dockerImage
-  def buildMetadata
+  def licensingSupportTypeDeterminer
 
   LicensingSupport(pipeline, runtimeGradle = null, dockerImage = null) {
     this.pipeline = pipeline
     this.runtimeGradle = runtimeGradle
     this.dockerImage = dockerImage
-    this.buildMetadata = new BuildMetadata(pipeline, pipeline.env.JOB_NAME, pipeline.env.BUILD_ID, pipeline.env.WORKSPACE)
+    this.licensingSupportTypeDeterminer = new LicensingSupportTypeDeterminer(pipeline)
   }
 
-  def updateLicenseReport(branchName, sshCredentialsId) {
+  def updateLicenseReport(branchName, sshCredentialsId, buildMetadata) {
     if ('master' == branchName) {
-      generateLicenseReport()
+      generateLicenseReport(buildMetadata)
       pushLicenseReport(sshCredentialsId)
     } else {
       pipeline.echo 'Not working with the master branch. Skipping Update License Report for the other branch.'
     }
   }
 
-  private def generateLicenseReport() {
-    def licensingSupportType = new LicensingSupportTypeDeterminer(pipeline).determineLicensingSupportType(buildMetadata)
-    pipeline.echo "Detected Licensing Support Type: ${licensingSupportType.title}"
-    pipeline.echo 'Generating License Information...'
+  private def generateLicenseReport(buildMetadata) {
+    pipeline.echo 'Generating License Information'
+    def licensingSupportType = licensingSupportTypeDeterminer.determineLicensingSupportType(buildMetadata)
     if (licensingSupportType == LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE) {
       if (null == runtimeGradle) {
         pipeline.sh './gradlew downloadLicenses'

@@ -10,17 +10,19 @@ class LicensingSupportTypeDeterminer {
   }
 
   LicensingSupportType determineLicensingSupportType(buildMetadata) {
+    def licensingSupportType = LicensingSupportType.NONE
     def projectTypes = buildMetadata.projectTypes()
     if (projectTypes.contains(ProjectTypes.JAVA)) {
       if (pipeline.sh(script: 'grep -c "com.github.hierynomus.license" build.gradle',
         returnStatus: true) == 0) {
-        return LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE
+        licensingSupportType = LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE
       }
     } else if (projectTypes.contains(ProjectTypes.RUBY)) {
       if (pipeline.sh(script: 'grep -c "license_finder" package.json', returnStatus: true) == 0) {
-        return LicensingSupportType.RUBY_LICENSE_FINDER
+        licensingSupportType = LicensingSupportType.RUBY_LICENSE_FINDER
       }
     }
-    LicensingSupportType.NONE
+    pipeline.echo "Detected Licensing Support Type: ${licensingSupportType.title}"
+    licensingSupportType
   }
 }
