@@ -59,8 +59,10 @@ class LicensingSupport {
       runGitSshCommand("git config --global user.email ${GIT_EMAIL}", true)
       runGitSshCommand("git add ${LICENSE_FOLDER}")
       runGitSshCommand('git commit -m "updated license info"')
-      //runGitSshCommand('git push origin master', true)
-      pipeline.sh 'git push origin master'
+
+      runGitSshCommand('git branch -a', true)
+      
+      runGitSshCommand('git push origin master', true)
     }
   }
 
