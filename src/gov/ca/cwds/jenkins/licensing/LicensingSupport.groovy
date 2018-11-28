@@ -40,6 +40,7 @@ class LicensingSupport {
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
+      pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
       dockerImage.withRun("-e CI=true") { container ->
         pipeline.sh "docker exec -t ${container.id} yarn licenses-report"
       }
