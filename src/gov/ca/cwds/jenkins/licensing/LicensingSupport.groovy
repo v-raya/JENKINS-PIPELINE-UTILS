@@ -41,15 +41,10 @@ class LicensingSupport {
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
-
-      pipeline.sh 'git branch'
-
       dockerImage.withRun("-e CI=true") { container ->
         pipeline.sh script: "docker exec -t ${container.id} mkdir ${LICENSE_FOLDER}", returnStatus: true
         pipeline.sh "docker exec -t ${container.id} yarn licenses-report"
-        pipeline.echo('1111111111 ' + pipeline.sh(script: "docker exec -t ${container.id} pwd", returnOutput: true))
-        def projectDir = pipeline.sh(script: "docker exec -t ${container.id} pwd", returnOutput: true)
-        pipeline.echo('2222222222 ' + projectDir)
+        def projectDir = pipeline.sh(script: "docker exec -t ${container.id} pwd", returnStdout: true).trim()
         pipeline.sh "docker cp ${container.id}:${projectDir}/${LICENSE_FOLDER}/licenses.csv ${LICENSE_FOLDER}/"
       }
     } else {
