@@ -41,6 +41,9 @@ class LicensingSupport {
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
+
+      pipeline.sh 'git branch'
+
       dockerImage.withRun("-e CI=true") { container ->
         def projectDir = pipeline.sh(script: "docker exec -t ${container.id} pwd", returnOutput: true)
         pipeline.sh script: "docker exec -t ${container.id} mkdir ${LICENSE_FOLDER}", returnStatus: true
@@ -59,7 +62,7 @@ class LicensingSupport {
       runSshCommand("git config --global user.email ${GIT_EMAIL}", true)
       runSshCommand("git add ${LICENSE_FOLDER}")
       runSshCommand('git commit -m "updated license info"')
-      runSshCommand('git push --set-upstream origin master', true)
+      runSshCommand('git push origin master', true)
     }
   }
 
