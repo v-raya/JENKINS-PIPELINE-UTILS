@@ -44,9 +44,9 @@ class LicensingSupport {
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
       dockerImage.withRun("-e CI=true") { container ->
         pipeline.sh script: "docker exec -t ${container.id} mkdir ${LICENSE_FOLDER}", returnStatus: true
-        pipeline.sh "docker exec -t ${container.id} touch ${LICENSES_FILE}"
+        //pipeline.sh "docker exec -t ${container.id} touch ${LICENSES_FILE}"
         pipeline.sh "docker exec -t ${container.id} yarn licenses-report"
-        pipeline.sh "docker cp ${container.id}:${LICENSES_FILE} ${LICENSES_FILE}"
+        pipeline.sh "docker cp ${container.name}:${LICENSES_FILE} ${LICENSES_FILE}"
       }
     } else {
       throw new Exception(MSG_NO_LICENSING_SUPPORT)
