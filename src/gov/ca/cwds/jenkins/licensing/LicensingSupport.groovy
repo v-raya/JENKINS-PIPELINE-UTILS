@@ -59,7 +59,7 @@ class LicensingSupport {
       runSshCommand("git add ${LICENSE_FOLDER}")
       runSshCommand('git commit -m "updated license info"')
       // runSshCommand('git push --set-upstream origin master', true)
-      runSshCommand('git push --set-upstream origin FIT-229', true)
+      runSshCommand('git push', true)
     }
   }
 
