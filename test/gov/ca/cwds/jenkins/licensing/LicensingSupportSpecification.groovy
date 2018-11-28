@@ -85,7 +85,7 @@ class LicensingSupportSpecification extends Specification {
 
     then: 'it will throw an exception with a message that ssh command is failed'
     def exception = thrown(Exception)
-    exception.message == "ssh command 'git config --global user.name Jenkins' failed"
+    exception.message == "command 'git config --global user.name Jenkins' failed"
   }
 
   def "When licensing support is asked to update license report for a project with gradle hierynomus license plugin then gradlew is called to generate license report"() {
@@ -184,11 +184,8 @@ class LicensingSupportSpecification extends Specification {
     licensingSupport.updateLicenseReport('master', 'credentials-id', _)
 
     then: 'Ruby license finder plugin is invoked'
+    1 * pipeline.sh([script: 'mkdir legal', returnStatus: true])
     1 * dockerImage.withRun(_ as String, _ as Closure)
-
-    and: 'no additional file operations are performed'
-    0 * pipeline.sh([script: 'mkdir legal', returnStatus: true])
-    0 * pipeline.sh('cp build/reports/license/* legal')
 
     and: 'a set of ssh git commands is executed to push possible changes of license report to the master branch'
     1 * pipeline.sshagent([credentials: ['credentials-id']], _)
