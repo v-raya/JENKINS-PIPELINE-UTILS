@@ -1,17 +1,10 @@
 package gov.ca.cwds.jenkins
 
+import gov.ca.cwds.jenkins.common.BuildMetadata
 import gov.ca.cwds.jenkins.licensing.LicensingSupport
 
-/*
-Usage in Jenkins pipeline:
-
-stage('Update License Report') {
-  updateLicenseReport(branch, sshCredentialsId, runtimeGradle)
-}
-
-gradleRuntime is optional
- */
-def call(branchName, sshCredentialsId, runtimeGradle = null) {
-  def licensingSupport = new LicensingSupport(this)
-  licensingSupport.updateLicenseReport(branchName, sshCredentialsId, runtimeGradle)
+def call(branchName, sshCredentialsId, options = [:]) {
+  def buildMetadata = new BuildMetadata(this, this.env.JOB_NAME, this.env.BUILD_ID, this.env.WORKSPACE)
+  def licensingSupport = new LicensingSupport(this, options.runtimeGradle, options.dockerImage)
+  licensingSupport.updateLicenseReport(branchName, sshCredentialsId, buildMetadata)
 }

@@ -1,7 +1,6 @@
 package gov.ca.cwds.jenkins.licensing
 
 import gov.ca.cwds.jenkins.common.ProjectTypes
-import gov.ca.cwds.jenkins.common.ProjectTypesDeterminer
 
 class LicensingSupportTypeDeterminer {
   def pipeline
@@ -10,19 +9,20 @@ class LicensingSupportTypeDeterminer {
     this.pipeline = pipeline
   }
 
-  LicensingSupportType determineLicensingSupportType() {
-    def projectTypesDeterminer = new ProjectTypesDeterminer(pipeline)
-    def projectTypes = projectTypesDeterminer.determineProjectTypes('.')
+  LicensingSupportType determineLicensingSupportType(buildMetadata) {
+    def licensingSupportType = LicensingSupportType.NONE
+    def projectTypes = buildMetadata.projectTypes()
     if (projectTypes.contains(ProjectTypes.JAVA)) {
       if (pipeline.sh(script: 'grep -c "com.github.hierynomus.license" build.gradle',
         returnStatus: true) == 0) {
-        return LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE
+        licensingSupportType = LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE
       }
     } else if (projectTypes.contains(ProjectTypes.RUBY)) {
       if (pipeline.sh(script: 'grep -c "license_finder" package.json', returnStatus: true) == 0) {
-        return LicensingSupportType.RUBY_LICENSE_FINDER
+        licensingSupportType = LicensingSupportType.RUBY_LICENSE_FINDER
       }
     }
-    LicensingSupportType.NONE
+    pipeline.echo "Detected Licensing Support Type: ${licensingSupportType.title}"
+    licensingSupportType
   }
 }
