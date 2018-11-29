@@ -65,29 +65,6 @@ class LicensingSupportSpecification extends Specification {
     exception.message == 'No known Licensing Support is found in the project'
   }
 
-  def "When licensing support can't run ssh git command then Exception is thrown"() {
-    given: 'a pipeline'
-    def pipeline = Spy(PipeLineScript)
-
-    and: 'it can detect Licensing Support Type'
-    def licensingSupportTypeDeterminer = Mock(LicensingSupportTypeDeterminer)
-    licensingSupportTypeDeterminer.determineLicensingSupportType(_) >> LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE
-
-    and: 'it cannot successfully run ssh git command'
-    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git config --global user.name Jenkins', returnStatus: true]) >> 1
-
-    and: 'a licensing support instance which is the class under test'
-    def licensingSupport = new LicensingSupport(pipeline)
-    licensingSupport.licensingSupportTypeDeterminer = licensingSupportTypeDeterminer
-
-    when: 'it is asked to update the license report for the master branch'
-    licensingSupport.updateLicenseReport('master', 'credentials-id', _)
-
-    then: 'it will throw an exception with a message that ssh command is failed'
-    def exception = thrown(Exception)
-    exception.message == "command 'git config --global user.name Jenkins' failed"
-  }
-
   def "When licensing support is asked to update license report for a project with gradle hierynomus license plugin then gradlew is called to generate license report"() {
     given: 'a pipeline'
     def pipeline = Mock(PipeLineScript)
