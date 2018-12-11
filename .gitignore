@@ -2,4 +2,8 @@
 build/
 out/
 .idea/
+bin/
 *.iml
+.project
+.settings/
+.classpath
