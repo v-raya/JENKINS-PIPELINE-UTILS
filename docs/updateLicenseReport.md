@@ -1,5 +1,17 @@
 # updateLicenseReport
 
+## Pre-requisites
+
+### Pre-requisites for a back-end project
+
+The Gradle Hierynomus License plugin should be applied in a back-end project build file.
+Applying the plugin is described here: https://github.com/hierynomus/license-gradle-plugin
+
+### Pre-requisites for a front-end project
+
+The LicenseFinder should be installed in a front-end project.
+Installation of the pligin is described here: https://github.com/pivotal-legacy/LicenseFinder
+
 ## Usage
 
 ### Usage in a back-end project
