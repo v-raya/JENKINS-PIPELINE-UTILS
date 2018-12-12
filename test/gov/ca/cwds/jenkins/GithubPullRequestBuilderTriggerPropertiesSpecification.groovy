@@ -21,4 +21,15 @@ class GithubPullRequestBuilderTriggerPropertiesSpecification extends Specificati
     then:
     properties['extensions'][1]['statusUrl'] == 'http://example.com:8080/job/myjob/33'
   }
+
+    def "#triggerProperties returns a map with correct retest phrase"() {
+    given:
+    def githubPullRequestBuilderTriggerProperties = new GithubPullRequestBuilderTriggerProperties(new PipelineScript())
+
+    when:
+    def properties = githubPullRequestBuilderTriggerProperties.triggerProperties('http://example.com:8080')
+
+    then:
+    properties['triggerPhrase'] == 'retest this please'
+  }
 }
