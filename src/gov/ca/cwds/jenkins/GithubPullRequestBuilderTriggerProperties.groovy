@@ -19,7 +19,7 @@ class GithubPullRequestBuilderTriggerProperties {
       permitAll: false,
       autoCloseFailedPullRequests: false,
       displayBuildErrorsOnDownstreamBuilds: false,
-      triggerPhrase: 'please retest me',
+      triggerPhrase: 'retest this please',
       skipBuildPhrase: '.*\\[skip\\W+ci\\].*',
       extensions: [
                     [ 
