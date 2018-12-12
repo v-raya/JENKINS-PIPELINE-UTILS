@@ -1,4 +1,4 @@
-# githubPullRequestBuilderTrigger
+# githubPullRequestBuilderTriggerProperties
 
 ## Usage
 
@@ -13,7 +13,7 @@
 
 ```groovy
 node('linux') {
-  triggerProperties = githubPullRequestBuilderTrigger('http://jenkins.dev.cwds.io:8080')
+  triggerProperties = githubPullRequestBuilderTriggerProperties('http://jenkins.dev.cwds.io:8080')
   properties([
     pipelineTriggers([triggerProperties])
   ])
@@ -22,7 +22,7 @@ node('linux') {
 
 ```groovy
 node('linux') {
-  triggerProperties = githubPullRequestBuilderTrigger()
+  triggerProperties = githubPullRequestBuilderTriggerProperties()
   properties([
     pipelineTriggers([triggerProperties])
   ])
