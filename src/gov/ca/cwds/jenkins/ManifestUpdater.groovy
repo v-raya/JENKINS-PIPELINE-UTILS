@@ -11,6 +11,12 @@ class ManifestUpdater {
   }
 
   def update(applicationName, manifestName, credentialsId, version) {
+    script.ws("/tmp/manifest_update") {
+      updateInsideNewWorkSpace(applicationName, manifestName, credentialsId, version)
+    }
+  }
+
+  def updateInsideNewWorkSpace(applicationName, manifestName, credentialsId, version) {
     checkoutCares(credentialsId)
     updateManifestFile(applicationName, manifestName, version)
     script.sshagent(credentials: [credentialsId]) { commitVersionInCares(applicationName, version) }
