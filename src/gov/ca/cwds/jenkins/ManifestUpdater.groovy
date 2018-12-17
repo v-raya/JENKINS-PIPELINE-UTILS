@@ -11,7 +11,7 @@ class ManifestUpdater {
   }
 
   def update(applicationName, manifestName, credentialsId, version) {
-    script.ws('/tmp') {
+    script.ws('/tmp/manifest_update') {
       checkoutCares(credentialsId)
       updateManifestFile(applicationName, manifestName, version)
       script.sshagent(credentials: [credentialsId]) { commitVersionInCares(applicationName, version) }
