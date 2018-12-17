@@ -9,6 +9,8 @@ class ManifestUpdaterSpecification extends Specification {
 
     def sh(hash) { }
 
+    def ws(filePath, closure) { }
+
     def git(hash) { }
 
     def readYaml(hash) { }
@@ -18,13 +20,25 @@ class ManifestUpdaterSpecification extends Specification {
     def PipeLineScript() { }
   }
 
-  def "#update writes to the yaml file"() {
+  def "#update runs in a new workspace"() {
+    given: "a manifest updater"
+    def PipeLineScript pipeline = Mock(PipeLineScript)
+    def manifestUpdater = new ManifestUpdater(pipeline)
+
+    when: "updating integration in cans"
+    manifestUpdater.update("cans", "integration", "cr-01", "2.3.0")
+
+    then: "it creates a new workspace"
+    1 * pipeline.ws("/tmp/manifest_update", _ as Closure)
+  }
+
+  def "#updateInsideNewWorkSpace writes to the yaml file"() {
     given: "a manifest updater"
     def PipeLineScript pipeline = Mock(PipeLineScript)
     def manifestUpdater = new ManifestUpdater(pipeline)
 
     when: "updating dashboard in preint"
-    manifestUpdater.update("dashboard", "preint", "cr-01", "1.3.0")
+    manifestUpdater.updateInsideNewWorkSpace("dashboard", "preint", "cr-01", "1.3.0")
 
     then: "it updates the file and commits the change"
     1 * pipeline.git([branch: "master", credentialsId: "cr-01", url: "git@github.com:ca-cwds/cws-cares.git"])
