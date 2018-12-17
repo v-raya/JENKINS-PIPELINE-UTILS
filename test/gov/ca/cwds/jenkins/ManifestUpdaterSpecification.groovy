@@ -26,9 +26,9 @@ class ManifestUpdaterSpecification extends Specification {
     def manifestUpdater = new ManifestUpdater(pipeline)
 
     when: "updating integration in cans"
-    manifestUpdater.update("dashboard", "preint", "cr-01", "1.3.0")
+    manifestUpdater.update("cans", "integration", "cr-01", "2.3.0")
 
-    then:
+    then: "it creates a new workspace"
     1 * pipeline.ws("/tmp/manifest_update", _ as Closure)
   }
 
