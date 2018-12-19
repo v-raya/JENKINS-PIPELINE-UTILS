@@ -20,7 +20,7 @@ class ManifestUpdater {
     if (script.sh(script: "git status --porcelain", returnStdout: true)) {
       script.sh(script: "git config --global user.email ${GIT_EMAIL}")
       script.sh(script: "git config --global user.name '${GIT_USER}'")
-      script.sh(script: "git commit -am \"Update ${applicationName} to ${version} from Jenkins :octocat:\"")
+      script.sh(script: "git commit -am \"Update ${applicationName} to ${version} from Jenkins on ${manifestName} :octocat:\"")
       script.sh(script: "git push origin master")
     }
   }
