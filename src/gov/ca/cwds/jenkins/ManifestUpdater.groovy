@@ -16,7 +16,7 @@ class ManifestUpdater {
     script.sshagent(credentials: [credentialsId]) { commitVersionInCares(applicationName, version) }
   }
 
-  def commitVersionInCares(applicationName, version) {
+  def commitVersionInCares(applicationName, version, manifestName) {
     if (script.sh(script: "git status --porcelain", returnStdout: true)) {
       script.sh(script: "git config --global user.email ${GIT_EMAIL}")
       script.sh(script: "git config --global user.name '${GIT_USER}'")
