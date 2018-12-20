@@ -13,7 +13,7 @@ class ManifestUpdater {
   def update(applicationName, manifestName, credentialsId, version) {
     checkoutCares(credentialsId)
     updateManifestFile(applicationName, manifestName, version)
-    script.sshagent(credentials: [credentialsId]) { commitVersionInCares(applicationName, version) }
+    script.sshagent(credentials: [credentialsId]) { commitVersionInCares(applicationName, version, manifestName) }
   }
 
   def commitVersionInCares(applicationName, version, manifestName) {
