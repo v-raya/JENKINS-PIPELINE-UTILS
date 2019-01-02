@@ -50,6 +50,32 @@ class TagFetcherSpecification extends Specification {
     tags == ["0.2.4", "1.2.3", "0.60.185"]
   }
 
+  def "#getTags with SemVer tags filtered by version prefix"() {
+    given:
+    PipeLineScript pipeline = Stub(PipeLineScript)
+    pipeline.sh(_) >> "cws-1.2.3_1098-RC\ncapu-0.60.185\nlis-1.6.0\nlis-1.6.1-RC1"
+    def tagFetcher = new TagFetcher(pipeline)
+
+    when:
+    def tags = tagFetcher.getTags('lis')
+
+    then:
+    tags == ["1.6.0", "1.6.1"]
+  }
+
+  def "#getTags with SemVer tags filtered by version prefix when yet there are no such tags"() {
+    given:
+    PipeLineScript pipeline = Stub(PipeLineScript)
+    pipeline.sh(_) >> "0.2.4.567\ncapu-1.2.3_1098-RC\njobs_0.60.185"
+    def tagFetcher = new TagFetcher(pipeline)
+
+    when:
+    def tags = tagFetcher.getTags('lis')
+
+    then:
+    tags == ["0.2.4", "0.60.185"]
+  }
+
   def "#getTags with SemVer tags that have duplicates"() {
     given:
     PipeLineScript pipeline = Stub(PipeLineScript)
