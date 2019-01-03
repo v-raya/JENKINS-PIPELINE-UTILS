@@ -11,7 +11,7 @@ class ManifestUpdater {
   }
 
   def update(applicationName, manifestName, credentialsId, version) {
-    script.ws("/tmp/manifest_update") {
+    script.ws {
       updateInsideNewWorkSpace(applicationName, manifestName, credentialsId, version)
     }
   }
