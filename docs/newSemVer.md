@@ -11,7 +11,7 @@
 of pull requests. Options are ['major', 'minor', 'patch']
 
 * *tagPrefixes* Is the optional list of prefixes of tags for pipelines that may produce multiple artifacts.
-If the list is passed, then one and only one of its values should be present among a PR labels. 
+If the list is passed, then one and only one of its values should be present among PR labels. 
 
 This returns a new SemVer tag bumped based upon a label set in the PR to `major`, `minor`, or `patch`.
 The returned new version can be used in downstream Jenkins stages to tag the project maybe using
