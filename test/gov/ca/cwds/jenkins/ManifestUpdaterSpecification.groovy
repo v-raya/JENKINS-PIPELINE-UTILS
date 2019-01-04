@@ -9,7 +9,7 @@ class ManifestUpdaterSpecification extends Specification {
 
     def sh(hash) { }
 
-    def ws(filePath, closure) { }
+    def ws(closure) { }
 
     def git(hash) { }
 
@@ -29,7 +29,7 @@ class ManifestUpdaterSpecification extends Specification {
     manifestUpdater.update("cans", "integration", "cr-01", "2.3.0")
 
     then: "it creates a new workspace"
-    1 * pipeline.ws("/tmp/manifest_update", _ as Closure)
+    1 * pipeline.ws(_ as Closure)
   }
 
   def "#updateInsideNewWorkSpace writes to the yaml file"() {
