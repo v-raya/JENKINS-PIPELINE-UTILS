@@ -36,5 +36,5 @@ On the Jenkins side the first time you setup you will need to configure the `tok
 Under Generic Webhook Trigger add the following fields:
 
 Token: dashboard-master
-Expression: ^closed:dashboard-master:true$
+Expression: ^closed:true$
 Text: $pull_request_action:$pull_request_merged
