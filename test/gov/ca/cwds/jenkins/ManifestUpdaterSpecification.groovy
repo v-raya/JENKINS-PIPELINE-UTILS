@@ -57,7 +57,7 @@ class ManifestUpdaterSpecification extends Specification {
     manifestUpdater.commitVersionInCares("dashboard", "1.3.0", "preint")
 
     then: "it commits as the Jenkins user"
-    1 * pipeline.sh([script: "git status --porcelain", returnStdout: true]) >> "?? Readme.md"
+    1 * pipeline.sh([script: "git status --porcelain --untracked-files=no", returnStdout: true]) >> "M preint.yml"
     1 * pipeline.sh([script: "git config --global user.email cwdsdoeteam@osi.ca.gov"])
     1 * pipeline.sh([script: "git config --global user.name 'Jenkins'"])
     1 * pipeline.sh([script: "git commit -am \"Update dashboard to 1.3.0 from Jenkins on preint :octocat:\""])
@@ -73,7 +73,7 @@ class ManifestUpdaterSpecification extends Specification {
     manifestUpdater.commitVersionInCares("dashboard", "1.2.4", "preint")
 
     then: "it noops"
-    1 * pipeline.sh([script: "git status --porcelain", returnStdout: true]) >> null
+    1 * pipeline.sh([script: "git status --porcelain --untracked-files=no", returnStdout: true]) >> null
     0 * pipeline.sh(_)
   }
 }
