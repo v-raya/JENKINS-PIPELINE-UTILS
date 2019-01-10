@@ -32,7 +32,9 @@ ruleset {
     EmptyForStatement
     EmptyIfStatement
     EmptyInstanceInitializer
-    EmptyMethod
+    EmptyMethod {
+      doNotApplyToFileNames='*Specification.groovy'
+    }
     EmptyStaticInitializer
     EmptySwitchStatement
     EmptySynchronizedStatement
