@@ -58,4 +58,32 @@ ruleset {
     ForStatementBraces
     IfStatementBraces
     WhileStatementBraces
+
+    // rulesets/concurrency.xml
+    BusyWait
+    DoubleCheckedLocking
+    InconsistentPropertyLocking
+    InconsistentPropertySynchronization
+    NestedSynchronization
+    StaticCalendarField
+    StaticConnection
+    StaticDateFormatField
+    StaticMatcherField
+    StaticSimpleDateFormatField
+    SynchronizedMethod
+    SynchronizedOnBoxedPrimitive
+    SynchronizedOnGetClass
+    SynchronizedOnReentrantLock
+    SynchronizedOnString
+    SynchronizedOnThis
+    SynchronizedReadObjectMethod
+    SystemRunFinalizersOnExit
+    ThisReferenceEscapesConstructor
+    ThreadGroup
+    ThreadLocalNotStaticFinal
+    ThreadYield
+    UseOfNotifyMethod
+    VolatileArrayField
+    VolatileLongOrDoubleField
+    WaitOutsideOfWhileLoop
 }
