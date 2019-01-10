@@ -52,4 +52,10 @@ ruleset {
     RemoveAllOnSelf
     ReturnFromFinallyBlock
     ThrowExceptionFromFinallyBlock
+
+    // rulesets/braces.xml
+    ElseBlockBraces
+    ForStatementBraces
+    IfStatementBraces
+    WhileStatementBraces
 }
