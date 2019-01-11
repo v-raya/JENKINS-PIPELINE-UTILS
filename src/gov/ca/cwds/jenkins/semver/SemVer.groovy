@@ -32,6 +32,6 @@ class SemVer {
   }
 
   private boolean isValidIncrementLabel(label) {
-    return label && IncrementTypes.values().collect({ it.toString() }).contains(label.toUpperCase())
+    return label && IncrementTypes.values().collect { it.toString() }.contains(label.toUpperCase())
   }
 }
