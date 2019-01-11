@@ -9,7 +9,7 @@ class SmokeTesterSpecification extends Specification {
     def error(hash) {}
 
     def sh(hash) {}
-    
+
     def echo(hash) {}
 
     def PipeLineScript() {}
@@ -27,7 +27,7 @@ class SmokeTesterSpecification extends Specification {
 
     then:
     0 * pipeline.error(_)
-    testResult == "smoke test passed"
+    testResult == "smoke test has passed"
   }
 
   def "#runSmokeTestFails"() {

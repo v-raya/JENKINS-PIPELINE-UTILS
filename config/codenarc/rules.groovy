@@ -120,4 +120,42 @@ ruleset {
       enabled=false
     }
     VectorIsObsolete
+
+  // rulesets/design.xml
+    AbstractClassWithPublicConstructor
+    AbstractClassWithoutAbstractMethod
+    AssignmentToStaticFieldFromInstanceMethod
+    BooleanMethodReturnsNull
+    BuilderMethodWithSideEffects
+    CloneableWithoutClone
+    CloseWithoutCloseable
+    CompareToWithoutComparable
+    ConstantsOnlyInterface
+    EmptyMethodInAbstractClass
+    FinalClassWithProtectedMember
+    ImplementationAsType
+    Instanceof
+    LocaleSetDefault
+    NestedForLoop
+    PrivateFieldCouldBeFinal
+    PublicInstanceField
+    ReturnsNullInsteadOfEmptyArray
+    ReturnsNullInsteadOfEmptyCollection
+    SimpleDateFormatMissingLocale
+    StatelessSingleton
+    ToStringReturnsNull
+
+   // rulesets/dry.xml
+    DuplicateListLiteral {
+      doNotApplyToFileNames='*Specification.groovy'
+    }
+    DuplicateMapLiteral {
+      doNotApplyToFileNames='*Specification.groovy'
+    }
+    DuplicateNumberLiteral {
+      doNotApplyToFileNames='*Specification.groovy'
+    }
+    DuplicateStringLiteral {
+      doNotApplyToFileNames='*Specification.groovy'
+    }
 }

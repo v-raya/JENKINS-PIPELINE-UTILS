@@ -7,6 +7,7 @@ class GithubPullRequestBuilderTriggerProperties {
     this.script = script
   }
 
+  @SuppressWarnings('DuplicateStringLiteral')
   def triggerProperties(jenkinsUrl) {
     [$class: 'org.jenkinsci.plugins.ghprb.GhprbTrigger',
       spec: 'H/5 * * * *',
@@ -22,7 +23,7 @@ class GithubPullRequestBuilderTriggerProperties {
       triggerPhrase: 'retest this please',
       skipBuildPhrase: '.*\\[skip\\W+ci\\].*',
       extensions: [
-                    [ 
+                    [
                         $class: 'org.jenkinsci.plugins.ghprb.extensions.build.GhprbCancelBuildsOnUpdate',
                         overrideGlobal: false
                     ],

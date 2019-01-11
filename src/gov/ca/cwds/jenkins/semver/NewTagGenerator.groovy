@@ -4,9 +4,11 @@ import com.cloudbees.groovy.cps.NonCPS
 
 class NewTagGenerator {
 
+  static final String PERIOD = '.'
+
   def newTag(tags, increment) {
     def latestTag = mostRecentVersion(tags)
-    def (major, minor, patch) = latestTag.tokenize(".").collect { it as Integer }
+    def (major, minor, patch) = latestTag.tokenize(PERIOD).collect { it as Integer }
     switch (increment) {
       case IncrementTypes.MAJOR:
         major++
@@ -27,8 +29,8 @@ class NewTagGenerator {
   @NonCPS
   String mostRecentVersion(tags) {
     tags.max { a, b ->
-      def versionA = a.tokenize('.')
-      def versionB = b.tokenize('.')
+      def versionA = a.tokenize(PERIOD)
+      def versionB = b.tokenize(PERIOD)
       def commonIndices = Math.min(versionA.size(), versionB.size())
       for (int index = 0; index < commonIndices; ++index) {
         def numberA = versionA[index].toInteger()
