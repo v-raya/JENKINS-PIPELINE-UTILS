@@ -158,4 +158,28 @@ ruleset {
     DuplicateStringLiteral {
       doNotApplyToFileNames='*Specification.groovy'
     }
+
+    // rulesets/exceptions.xml
+    CatchArrayIndexOutOfBoundsException
+    CatchError
+    CatchException
+    CatchIllegalMonitorStateException
+    CatchIndexOutOfBoundsException
+    CatchNullPointerException
+    CatchRuntimeException
+    CatchThrowable
+    ConfusingClassNamedException
+    ExceptionExtendsError
+    ExceptionExtendsThrowable
+    ExceptionNotThrown
+    MissingNewInThrowStatement
+    ReturnNullFromCatchBlock
+    SwallowThreadDeath
+    ThrowError
+    ThrowException {
+      enabled=false
+    }
+    ThrowNullPointerException
+    ThrowRuntimeException
+    ThrowThrowable
 }
