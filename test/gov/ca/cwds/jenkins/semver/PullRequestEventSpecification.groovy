@@ -15,6 +15,7 @@ class PullRequestEventSpecification extends Specification {
   }
 
   class Environment {
+    @SuppressWarnings('PropertyName')
     String pull_request_event
 
     def Environment() {

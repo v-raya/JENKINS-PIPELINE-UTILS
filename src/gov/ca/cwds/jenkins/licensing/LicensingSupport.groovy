@@ -1,11 +1,11 @@
 package gov.ca.cwds.jenkins.licensing
 
 class LicensingSupport {
-  final def GIT_USER = 'Jenkins'
-  final def GIT_EMAIL = 'cwdsdoeteam@osi.ca.gov'
-  final def LICENSE_BUILD_FOLDER = 'build/reports/license'
-  final def LICENSE_FOLDER = 'legal'
-  final def MSG_NO_LICENSING_SUPPORT = 'No known Licensing Support is found in the project'
+  public static final String GIT_USER = 'Jenkins'
+  public static final String GIT_EMAIL = 'cwdsdoeteam@osi.ca.gov'
+  public static final String LICENSE_BUILD_FOLDER = 'build/reports/license'
+  public static final String LICENSE_FOLDER = 'legal'
+  public static final String MSG_NO_LICENSING_SUPPORT = 'No known Licensing Support is found in the project'
 
   def pipeline
   def runtimeGradle

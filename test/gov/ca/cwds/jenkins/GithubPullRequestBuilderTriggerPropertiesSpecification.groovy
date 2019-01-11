@@ -4,8 +4,8 @@ import spock.lang.Specification
 
 class GithubPullRequestBuilderTriggerPropertiesSpecification extends Specification {
   class Environment {
-    def JOB_NAME = 'myjob'
-    def BUILD_ID = 33
+    public static final String JOB_NAME = 'myjob'
+    public static final String BUILD_ID = 33
   }
   class PipelineScript {
     def env = new Environment()

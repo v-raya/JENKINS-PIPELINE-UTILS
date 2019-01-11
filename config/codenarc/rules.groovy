@@ -277,4 +277,26 @@ ruleset {
     NoWildcardImports
     UnnecessaryGroovyImport
     UnusedImport
+
+    // rulesets/naming.xml
+    AbstractClassName
+    ClassName
+    ClassNameSameAsFilename
+    ClassNameSameAsSuperclass
+    ConfusingMethodName
+    FactoryMethodName {
+      enabled=false
+    }
+    FieldName
+    InterfaceName
+    InterfaceNameSameAsSuperInterface
+    MethodName {
+      doNotApplyToFileNames='*Specification.groovy'
+    }
+    ObjectOverrideMisspelledMethodName
+    PackageName
+    PackageNameMatchesFilePath
+    ParameterName
+    PropertyName
+    VariableName
 }

@@ -14,7 +14,7 @@ class LicensingSupportSpecification extends Specification {
 
     def sh(hash) { }
 
-    def echo(String) { }
+    def echo(string) { }
   }
 
   class RuntimeGradle {

@@ -1,9 +1,10 @@
 package gov.ca.cwds.jenkins
 
 class GithubRepoTagger {
-  def GIT_SSH_COMMAND = 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"'
-  def GIT_USER = "Jenkins"
-  def GIT_EMAIL = "cwdsdoeteam@osi.ca.gov"
+  public static final String GIT_SSH_COMMAND = 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o ' +
+    'StrictHostKeyChecking=no"'
+  public static final String  GIT_USER = "Jenkins"
+  public static final String  GIT_EMAIL = "cwdsdoeteam@osi.ca.gov"
   def script
 
   def GithubRepoTagger(script) {

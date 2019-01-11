@@ -1,11 +1,10 @@
 package gov.ca.cwds.jenkins.common
 
 class ProjectTypesDeterminer {
+  public static final String LINT_CONFIGS_RUBY = '.ruby-version'
+  public static final String LINT_CONFIGS_JAVASCRIPT = '.eslintrc'
+  public static final String LINT_CONFIGS_JAVA = 'build.gradle'
   def script
-
-  def LINT_CONFIGS_RUBY = '.ruby-version'
-  def LINT_CONFIGS_JAVASCRIPT = '.eslintrc'
-  def LINT_CONFIGS_JAVA = 'build.gradle'
 
   def ProjectTypesDeterminer(script) {
     this.script = script

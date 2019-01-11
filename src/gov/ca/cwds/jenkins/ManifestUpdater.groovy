@@ -1,9 +1,9 @@
 package gov.ca.cwds.jenkins
 
 class ManifestUpdater {
-  def CARES_GITHUB_URL = "git@github.com:ca-cwds/cws-cares.git"
-  def GIT_USER = "Jenkins"
-  def GIT_EMAIL = "cwdsdoeteam@osi.ca.gov"
+  public static final String CARES_GITHUB_URL = "git@github.com:ca-cwds/cws-cares.git"
+  public static final String GIT_USER = "Jenkins"
+  public static final String GIT_EMAIL = "cwdsdoeteam@osi.ca.gov"
   def script
 
   def ManifestUpdater(script) {

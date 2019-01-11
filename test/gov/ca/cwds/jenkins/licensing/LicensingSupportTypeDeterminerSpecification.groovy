@@ -12,7 +12,7 @@ class LicensingSupportTypeDeterminerSpecification extends Specification {
 
     def sh(hash) { }
 
-    def echo(String) { }
+    def echo(string) { }
   }
 
   def "When a Java project without the Hierynomus License gradle plugin"() {
