@@ -34,6 +34,7 @@ dependencies {
   // mandatory dependencies for using Spock
   compile 'com.cloudbees:groovy-cps:1.22'
   compile "org.codehaus.groovy:groovy-all:2.4.15"
+  compile group: 'org.gmetrics', name: 'GMetrics', version: '1.0'
   testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
 
   // optional dependencies for using Spock
