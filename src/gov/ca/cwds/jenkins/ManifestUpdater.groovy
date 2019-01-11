@@ -26,7 +26,7 @@ class ManifestUpdater {
     if (script.sh(script: "git status --porcelain --untracked-files=no", returnStdout: true)) {
       script.sh(script: "git config --global user.email ${GIT_EMAIL}")
       script.sh(script: "git config --global user.name '${GIT_USER}'")
-      script.sh(script: "git commit -am \"Update ${applicationName} to ${version} from Jenkins on ${manifestName} :octocat:\"")
+      script.sh(script: commitMessage(applicationName, version, manifestName))
       script.sh(script: "git push origin master")
     }
   }
@@ -40,5 +40,9 @@ class ManifestUpdater {
     properties."${applicationName}" = version
     script.sh("rm ${manifestName}.yaml")
     script.writeYaml file: "${manifestName}.yaml", data: properties
+  }
+
+  private commitMessage(applicationName, version, manifestName) {
+    "git commit -am \"Update ${applicationName} to ${version} from Jenkins on ${manifestName} :octocat:\""
   }
 }

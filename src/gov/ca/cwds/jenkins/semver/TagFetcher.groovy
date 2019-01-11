@@ -13,7 +13,7 @@ class TagFetcher {
     def tags = extractSemVerTags(rawTags, regex)
     if (tagPrefix && !tags) {
       // yet no tags with the prefix but could be tags with just versions (no other prefixes) to use further
-      tags = extractSemVerTags(rawTags,/(\d+\.\d+\.\d+)/,/\w+\-\d+\.\d+\.\d+/)
+      tags = extractSemVerTags(rawTags, /(\d+\.\d+\.\d+)/, /\w+\-\d+\.\d+\.\d+/)
     }
     tags
   }

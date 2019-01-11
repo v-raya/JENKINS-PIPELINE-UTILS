@@ -33,7 +33,7 @@ class PullRequestEventSpecification extends Specification {
     pullRequestEvent.getEvent()
 
     then:
-    1 * pipeline.readJSON(_) >> { arguments -> buildArguments=arguments[0]}
+    1 * pipeline.readJSON(_) >> { arguments -> buildArguments = arguments[0] }
     buildArguments['text'] == "pr_event"
   }
 }

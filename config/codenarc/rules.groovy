@@ -115,7 +115,9 @@ ruleset {
     StaticFieldsBeforeInstanceFields
     StaticMethodsBeforeInstanceMethods
     TernaryCouldBeElvis
-    TrailingComma
+    TrailingComma {
+      doNotApplyToFileNames='*Specification.groovy'
+    }
     VariableTypeRequired {
       enabled=false
     }
@@ -182,4 +184,43 @@ ruleset {
     ThrowNullPointerException
     ThrowRuntimeException
     ThrowThrowable
+
+    // rulesets/formatting.xml
+    BlankLineBeforePackage
+    BlockEndsWithBlankLine
+    BlockStartsWithBlankLine
+    BracesForClass
+    BracesForForLoop
+    BracesForIfElse
+    BracesForMethod
+    BracesForTryCatchFinally
+    ClassJavadoc {
+      enabled = false
+    }
+    ClosureStatementOnOpeningLineOfMultipleLineClosure
+    ConsecutiveBlankLines
+    FileEndsWithoutNewline
+    Indentation {
+      spacesPerIndentLevel=2
+    }
+    LineLength
+    MissingBlankLineAfterImports
+    MissingBlankLineAfterPackage
+    SpaceAfterCatch
+    SpaceAfterClosingBrace
+    SpaceAfterComma
+    SpaceAfterFor
+    SpaceAfterIf
+    SpaceAfterOpeningBrace
+    SpaceAfterSemicolon
+    SpaceAfterSwitch
+    SpaceAfterWhile
+    SpaceAroundClosureArrow
+    SpaceAroundMapEntryColon {
+      characterAfterColonRegex=/\s/
+    }
+    SpaceAroundOperator
+    SpaceBeforeClosingBrace
+    SpaceBeforeOpeningBrace
+    TrailingWhitespace
 }

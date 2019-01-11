@@ -10,12 +10,12 @@ class LicensingSupportTypeDeterminerSpecification extends Specification {
     PipeLineScript() {
     }
 
-    def sh(hash) {}
+    def sh(hash) { }
 
-    def echo(String) {}
+    def echo(String) { }
   }
 
-  def "When a Java project without the Hierynomus License gradle plugin then the 'NONE' Licensing Support Type is determined"() {
+  def "When a Java project without the Hierynomus License gradle plugin"() {
     given: 'a pipeline'
     def pipeline = Mock(PipeLineScript)
 
@@ -34,7 +34,7 @@ class LicensingSupportTypeDeterminerSpecification extends Specification {
     1 * pipeline.echo('Detected Licensing Support Type: None')
   }
 
-  def "When a Ruby project without the License Finder plugin then the 'NONE' Licensing Support Type is determined"() {
+  def "When a Ruby project without the License Finder plugin"() {
     given: 'a pipeline'
     def pipeline = Mock(PipeLineScript)
 
@@ -53,7 +53,7 @@ class LicensingSupportTypeDeterminerSpecification extends Specification {
     1 * pipeline.echo('Detected Licensing Support Type: None')
   }
 
-  def "When a Java project with the Hierynomus License gradle plugin then the 'GRADLE_HIERYNOMUS_LICENSE' Licensing Support Type is determined"() {
+  def "When a Java project with the Hierynomus License gradle plugin"() {
     given: 'a pipeline'
     def pipeline = Mock(PipeLineScript)
 
@@ -73,7 +73,7 @@ class LicensingSupportTypeDeterminerSpecification extends Specification {
     1 * pipeline.echo('Detected Licensing Support Type: Gradle Hierynomus License Plugin')
   }
 
-  def "When a Ruby project with the License Finder plugin then the 'RUBY_LICENSE_FINDER' Licensing Support Type is determined"() {
+  def "When a Ruby project with the License Finder plugin"() {
     given: 'a pipeline'
     def pipeline = Mock(PipeLineScript)
 

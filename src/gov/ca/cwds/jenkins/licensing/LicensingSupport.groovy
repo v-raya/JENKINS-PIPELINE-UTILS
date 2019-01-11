@@ -64,7 +64,8 @@ class LicensingSupport {
   }
 
   private def runGitSshCommand(command) {
-    // the GIT_SSH_COMMAND variable is used to avoid known_hosts addition, which would require each machine to have GitHub added in advance (maybe should do?)
+    // the GIT_SSH_COMMAND variable is used to avoid known_hosts addition
+    // which would require each machine to have GitHub added in advance
     pipeline.sh script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' + command
   }
 }

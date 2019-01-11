@@ -6,17 +6,16 @@ class SmokeTesterSpecification extends Specification {
 
   class PipeLineScript {
 
-    def error(hash) {}
+    def error(hash) { }
 
-    def sh(hash) {}
+    def sh(hash) { }
 
-    def echo(hash) {}
+    def echo(hash) { }
 
-    def PipeLineScript() {}
+    def PipeLineScript() { }
   }
 
   def "#runSmokeTestPasses"() {
-
     given:
     def PipeLineScript pipeline = Mock(PipeLineScript)
     pipeline.sh([script: "passed test", returnStdout: true]) >> "smoketest passed"
@@ -31,7 +30,6 @@ class SmokeTesterSpecification extends Specification {
   }
 
   def "#runSmokeTestFails"() {
-
     given:
     def pipeline = Mock(PipeLineScript)
     def smokeTester = new SmokeTester(pipeline)

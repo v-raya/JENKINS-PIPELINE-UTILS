@@ -3,9 +3,9 @@ package gov.ca.cwds.jenkins.semver
 class LabelChecker {
   def script
 
-    def LabelChecker(script) {
-      this.script = script
-    }
+  def LabelChecker(script) {
+    this.script = script
+  }
 
   def check(projectName, List tagPrefixes = []) {
     def pullRequestUrl = "https://api.github.com/repos/ca-cwds/${projectName}/issues/${script.env.ghprbPullId}/labels"

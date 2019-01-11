@@ -17,7 +17,7 @@ class DockerSpecification extends Specification {
     def sh(hash) {
     }
   }
-    
+
   class GlobalDocker {
     def build(imageName, parameters) {
     }
@@ -27,11 +27,8 @@ class DockerSpecification extends Specification {
   }
 
   class DockerImage {
-    def withRun(closure) {
-
-    }
+    def withRun(closure) { }
   }
-
 
   def "#createTestingImage implemented correctly"() {
     given:
@@ -40,7 +37,6 @@ class DockerSpecification extends Specification {
     def docker = new Docker(pipelineScript)
     def buildMetadata = new BuildMetadata(pipelineScript, 'myjob', '22', './somepath/to/project' )
 
-  
     when:
     docker.createTestingImage('./somepath/Dockerfile', buildMetadata)
 
@@ -66,15 +62,15 @@ class DockerSpecification extends Specification {
     def dockerImage = Mock(DockerImage)
     def globalDocker = Stub(GlobalDocker)
     globalDocker.image(_) >> dockerImage
-    
+
     def pipelineScript = new PipelineScript(globalDocker)
     def docker = new Docker(pipelineScript)
     def buildMetadata = new BuildMetadata(pipelineScript, 'myjob', '22', './somepath/to/project' )
-  
+
     when:
     docker.withTestingImage('some_command', buildMetadata)
 
     then:
     1 * dockerImage.withRun(_ as Closure)
-  }  
+  }
 }

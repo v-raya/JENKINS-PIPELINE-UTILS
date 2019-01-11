@@ -5,22 +5,22 @@ class ProjectTypesDeterminer {
 
   def LINT_CONFIGS_RUBY = '.ruby-version'
   def LINT_CONFIGS_JAVASCRIPT = '.eslintrc'
-  def LINT_CONFIGS_JAVA = 'build.gradle' 
+  def LINT_CONFIGS_JAVA = 'build.gradle'
 
   def ProjectTypesDeterminer(script) {
     this.script = script
   }
-  
+
   def determineProjectTypes(directory) {
     script.echo "the directoy is ${directory}"
     def projectTypes = []
-    if(isJavaProject(directory)) {
+    if (isJavaProject(directory)) {
       projectTypes.add(ProjectTypes.JAVA)
     }
-    if(isJavascriptProject(directory)) {
+    if (isJavascriptProject(directory)) {
       projectTypes.add(ProjectTypes.JAVASCRIPT)
     }
-    if(isRubyProject(directory)) {
+    if (isRubyProject(directory)) {
       projectTypes.add(ProjectTypes.RUBY)
     }
 

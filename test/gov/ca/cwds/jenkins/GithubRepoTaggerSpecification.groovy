@@ -45,7 +45,9 @@ class GithubRepoTaggerSpecification extends Specification {
     given: "a GithubRepoTagger"
     def PipeLineScript pipeline = Mock(PipeLineScript)
     def githubRepoTagger = new GithubRepoTagger(pipeline)
-    def configCommands = "${githubRepoTagger.GIT_SSH_COMMAND} git config --global user.email ${githubRepoTagger.GIT_EMAIL}; git config --global user.name ${githubRepoTagger.GIT_USER}"
+    def configCommands = "${githubRepoTagger.GIT_SSH_COMMAND} " +
+      "git config --global user.email ${githubRepoTagger.GIT_EMAIL}; " +
+      "git config --global user.name ${githubRepoTagger.GIT_USER}"
 
     when: "it returns a non-zero return code"
     githubRepoTagger.tagAndPush("1.1.1")
@@ -61,7 +63,9 @@ class GithubRepoTaggerSpecification extends Specification {
     given: "a GithubRepoTagger"
     def PipeLineScript pipeline = Mock(PipeLineScript)
     def githubRepoTagger = new GithubRepoTagger(pipeline)
-    def configCommands = "${githubRepoTagger.GIT_SSH_COMMAND} git config --global user.email ${githubRepoTagger.GIT_EMAIL}; git config --global user.name ${githubRepoTagger.GIT_USER}"
+    def configCommands = "${githubRepoTagger.GIT_SSH_COMMAND} " +
+      "git config --global user.email ${githubRepoTagger.GIT_EMAIL}; " +
+      "git config --global user.name ${githubRepoTagger.GIT_USER}"
 
     when: "it returns a non-zero return code"
     githubRepoTagger.tagAndPush("1.1.1")
@@ -78,7 +82,9 @@ class GithubRepoTaggerSpecification extends Specification {
     given: "a GithubRepo Trigger"
     def PipeLineScript pipeline = Mock(PipeLineScript)
     def githubRepoTagger = new GithubRepoTagger(pipeline)
-    def configCommands = "${githubRepoTagger.GIT_SSH_COMMAND} git config --global user.email ${githubRepoTagger.GIT_EMAIL}; git config --global user.name ${githubRepoTagger.GIT_USER}"
+    def configCommands = "${githubRepoTagger.GIT_SSH_COMMAND} " +
+      "git config --global user.email ${githubRepoTagger.GIT_EMAIL}; " +
+      "git config --global user.name ${githubRepoTagger.GIT_USER}"
 
     when: "tagging and pushing"
     githubRepoTagger.tagAndPush("1.1.1")

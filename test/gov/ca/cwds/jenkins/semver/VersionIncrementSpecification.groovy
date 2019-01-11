@@ -46,7 +46,8 @@ class VersionIncrementSpecification extends Specification {
 
     then:
     def error = thrown(Exception)
-    error.message == "More than one version increment label found. Please label PR with only one of 'major', 'minor', or 'patch'"
+    error.message == "More than one version increment label found. " +
+      "Please label PR with only one of 'major', 'minor', or 'patch'"
   }
 
   def "#increment with no labels"() {

@@ -17,6 +17,6 @@ class BuildMetadata {
   }
 
   def projectTypes() {
-    projectTypesDeterminer.determineProjectTypes(projectPath) 
+    projectTypesDeterminer.determineProjectTypes(projectPath)
   }
 }

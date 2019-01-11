@@ -19,7 +19,7 @@ class Docker {
 
   def withTestingImage(String command, BuildMetadata buildMetadata) {
     def dockerImage = script.docker.image("${testingImageName(buildMetadata)}")
-    dockerImage.withRun { container -> script.sh "docker exec -t ${container.id} ${command}"}
+    dockerImage.withRun { container -> script.sh "docker exec -t ${container.id} ${command}" }
   }
 
   private testingImageName(BuildMetadata buildMetadata) {

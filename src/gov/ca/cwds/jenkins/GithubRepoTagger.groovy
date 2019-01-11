@@ -16,16 +16,20 @@ class GithubRepoTagger {
 
   def tagAndPush(tag) {
     def tagStatus = script.sh(script: "git tag ${tag}", returnStatus: true)
-    if( tagStatus != 0) {
+    if ( tagStatus != 0) {
       throw new Exception("Unable to tag the repository with tag '${tag}'")
     }
-    def configStatus = script.sh(script: "${GIT_SSH_COMMAND} git config --global user.email ${GIT_EMAIL}; git config --global user.name ${GIT_USER}", returnStatus: true)
-    if( configStatus != 0) {
+    def configStatus = script.sh(script: configGitCredentialsCommand(), returnStatus: true)
+    if ( configStatus != 0) {
       throw new Exception("Unable to config the Jenkins user")
     }
     def pushStatus = script.sh(script: "${GIT_SSH_COMMAND} git push origin ${tag}", returnStatus: true)
-    if( pushStatus != 0) {
+    if ( pushStatus != 0) {
       throw new Exception("Unable to push the tag '${tag}'")
     }
+  }
+
+  private configGitCredentialsCommand() {
+    "${GIT_SSH_COMMAND} git config --global user.email ${GIT_EMAIL}; git config --global user.name ${GIT_USER}"
   }
 }

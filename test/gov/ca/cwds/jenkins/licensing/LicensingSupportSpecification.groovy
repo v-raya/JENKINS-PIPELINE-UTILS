@@ -12,23 +12,23 @@ class LicensingSupportSpecification extends Specification {
       closure()
     }
 
-    def sh(hash) {}
+    def sh(hash) { }
 
-    def echo(String) {}
+    def echo(String) { }
   }
 
   class RuntimeGradle {
     RuntimeGradle() {
     }
 
-    def run(map) {}
+    def run(map) { }
   }
 
   class DockerImage {
-    def withRun(string, closure) {}
+    def withRun(string, closure) { }
   }
 
-  def "When licensing support is asked to update the license report for a non-master branch then skip license report generation"() {
+  def "When updating license report for a non-master branch then skip license report generation"() {
     given: 'a pipeline'
     def pipeline = Mock(PipeLineScript)
 
@@ -65,7 +65,7 @@ class LicensingSupportSpecification extends Specification {
     exception.message == 'No known Licensing Support is found in the project'
   }
 
-  def "When licensing support is asked to update license report for a project with gradle hierynomus license plugin then gradlew is called to generate license report"() {
+  def "With a project with gradle hierynomus license plugin then gradlew is called to generate license report"() {
     given: 'a pipeline'
     def pipeline = Mock(PipeLineScript)
 
@@ -74,9 +74,12 @@ class LicensingSupportSpecification extends Specification {
     licensingSupportTypeDeterminer.determineLicensingSupportType(_) >> LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE
 
     and: 'it can successfully run ssh git commands'
-    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git config --global user.name Jenkins', returnStatus: true]) >> 0
-    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git config --global user.email cwdsdoeteam@osi.ca.gov', returnStatus: true]) >> 0
-    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git push --set-upstream origin master', returnStatus: true]) >> 0
+    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' +
+      'git config --global user.name Jenkins', returnStatus: true]) >> 0
+    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' +
+      'git config --global user.email cwdsdoeteam@osi.ca.gov', returnStatus: true]) >> 0
+    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' +
+      'git push --set-upstream origin master', returnStatus: true]) >> 0
 
     and: 'a licensing support instance which is the class under test'
     def licensingSupport = new LicensingSupport(pipeline)
@@ -100,7 +103,7 @@ class LicensingSupportSpecification extends Specification {
     1 * pipeline.echo('Updating License Information')
   }
 
-  def "When licensing support is asked to update license report for a project with gradle hierynomus license plugin and it RuntimeGradle is provided then the GradleRuntime is used to generate license report"() {
+  def "With a project with gradle hierynomus license plugin and RuntimeGradle is provided"() {
     given: 'a pipeline'
     def pipeline = Mock(PipeLineScript)
 
@@ -109,9 +112,12 @@ class LicensingSupportSpecification extends Specification {
     licensingSupportTypeDeterminer.determineLicensingSupportType(_) >> LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE
 
     and: 'it can successfully run ssh git commands'
-    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git config --global user.name Jenkins', returnStatus: true]) >> 0
-    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git config --global user.email cwdsdoeteam@osi.ca.gov', returnStatus: true]) >> 0
-    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git push --set-upstream origin master', returnStatus: true]) >> 0
+    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' +
+      'git config --global user.name Jenkins', returnStatus: true]) >> 0
+    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' +
+      'git config --global user.email cwdsdoeteam@osi.ca.gov', returnStatus: true]) >> 0
+    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' +
+      'git push --set-upstream origin master', returnStatus: true]) >> 0
 
     and: 'runtime gradle is provided'
     def runtimeGradle = Mock(RuntimeGradle)
@@ -139,7 +145,7 @@ class LicensingSupportSpecification extends Specification {
     1 * pipeline.echo('Updating License Information')
   }
 
-  def "When licensing support is asked to update license report for a project with license finder plugin then the plugin is used to generate license report"() {
+  def "When a project has a license finder plugin"() {
     given: 'a pipeline'
     def pipeline = Mock(PipeLineScript)
 
@@ -148,9 +154,12 @@ class LicensingSupportSpecification extends Specification {
     licensingSupportTypeDeterminer.determineLicensingSupportType(_) >> LicensingSupportType.RUBY_LICENSE_FINDER
 
     and: 'it can successfully run ssh git commands'
-    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git config --global user.name Jenkins', returnStatus: true]) >> 0
-    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git config --global user.email cwdsdoeteam@osi.ca.gov', returnStatus: true]) >> 0
-    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git push --set-upstream origin master', returnStatus: true]) >> 0
+    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' +
+      'git config --global user.name Jenkins', returnStatus: true]) >> 0
+    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' +
+      'git config --global user.email cwdsdoeteam@osi.ca.gov', returnStatus: true]) >> 0
+    pipeline.sh([script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' +
+      'git push --set-upstream origin master', returnStatus: true]) >> 0
 
     and: 'a licensing support instance which is the class under test'
     def dockerImage = Mock(DockerImage)

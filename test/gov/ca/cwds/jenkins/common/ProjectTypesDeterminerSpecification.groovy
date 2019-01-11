@@ -2,12 +2,10 @@ package gov.ca.cwds.jenkins.common
 
 import spock.lang.Specification
 
-
 class ProjectTypesDeterminerSpecification extends Specification {
 
   class PipelineScript {
-      def sh(hash) {
-      }
+    def sh(hash) { }
   }
 
   def "#determineProjectTypes determines java correctly"() {
@@ -16,7 +14,7 @@ class ProjectTypesDeterminerSpecification extends Specification {
     pipelineScript.sh([script: "ls -al JavaProject/build.gradle", returnStatus: true]) >> 0
 
     def projectTypesDeterminer = new ProjectTypesDeterminer(pipelineScript)
-    
+
     when:
     def projectTypes = projectTypesDeterminer.determineProjectTypes("JavaProject")
 
@@ -30,7 +28,7 @@ class ProjectTypesDeterminerSpecification extends Specification {
     pipelineScript.sh([script: "ls -al JavascriptProject/.eslintrc", returnStatus: true]) >> 0
 
     def projectTypesDeterminer = new ProjectTypesDeterminer(pipelineScript)
-    
+
     when:
     def projectTypes = projectTypesDeterminer.determineProjectTypes("JavascriptProject")
 
@@ -44,13 +42,13 @@ class ProjectTypesDeterminerSpecification extends Specification {
     pipelineScript.sh([script: "ls -al RubyProject/.ruby-version", returnStatus: true]) >> 0
 
     def projectTypesDeterminer = new ProjectTypesDeterminer(pipelineScript)
-    
+
     when:
     def projectTypes = projectTypesDeterminer.determineProjectTypes("RubyProject")
 
     then:
     projectTypes.contains(ProjectTypes.RUBY)
-  }  
+  }
 
   def "#determineProjectTypes determines ruby and javascriopt correctly"() {
     given:
@@ -59,7 +57,7 @@ class ProjectTypesDeterminerSpecification extends Specification {
     pipelineScript.sh([script: "ls -al RubyAndJavascriptProject/.eslintrc", returnStatus: true]) >> 0
 
     def projectTypesDeterminer = new ProjectTypesDeterminer(pipelineScript)
-    
+
     when:
     def projectTypes = projectTypesDeterminer.determineProjectTypes("RubyAndJavascriptProject")
 
