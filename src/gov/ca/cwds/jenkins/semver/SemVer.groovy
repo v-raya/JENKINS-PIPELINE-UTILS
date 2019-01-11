@@ -26,9 +26,9 @@ class SemVer {
       tagPrefix = new TagPrefixFinder(tagPrefixes).find(eventLabels)
     }
     def existingTags = tagFetcher.getTags(tagPrefix)
-    label = isValidIncrementLabel(label) ? label.toUpperCase() as IncrementTypes
+    def incrementLabel = isValidIncrementLabel(label) ? label.toUpperCase() as IncrementTypes
       : versionIncrement.increment(eventLabels)
-    (tagPrefix ? tagPrefix + '-' : '') + newTagGenerator.newTag(existingTags, label)
+    (tagPrefix ? tagPrefix + '-' : '') + newTagGenerator.newTag(existingTags, incrementLabel)
   }
 
   private boolean isValidIncrementLabel(label) {

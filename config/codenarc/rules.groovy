@@ -86,4 +86,38 @@ ruleset {
     VolatileArrayField
     VolatileLongOrDoubleField
     WaitOutsideOfWhileLoop
+
+ // rulesets/convention.xml
+    ConfusingTernary
+    CouldBeElvis
+    CouldBeSwitchStatement
+    FieldTypeRequired {
+      enabled=false
+    }
+    HashtableIsObsolete
+    IfStatementCouldBeTernary
+    InvertedCondition
+    InvertedIfElse
+    LongLiteralWithLowerCaseL
+    MethodParameterTypeRequired {
+      enabled=false
+    }
+    MethodReturnTypeRequired {
+      enabled=false
+    }
+    NoDef {
+      enabled=false
+    }
+    NoJavaUtilDate
+    NoTabCharacter
+    ParameterReassignment
+    PublicMethodsBeforeNonPublicMethods
+    StaticFieldsBeforeInstanceFields
+    StaticMethodsBeforeInstanceMethods
+    TernaryCouldBeElvis
+    TrailingComma
+    VariableTypeRequired {
+      enabled=false
+    }
+    VectorIsObsolete
 }

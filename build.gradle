@@ -19,6 +19,7 @@ test {
 }
 
 codenarc {
+  toolVersion = "1.2.1"
   configFile = rootProject.file("config/codenarc/rules.groovy")
 }
 

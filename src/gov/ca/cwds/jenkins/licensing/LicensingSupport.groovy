@@ -20,7 +20,7 @@ class LicensingSupport {
   }
 
   def updateLicenseReport(branchName, sshCredentialsId, buildMetadata) {
-    if ('master' == branchName) {
+    if (branchName == 'master') {
       generateLicenseReport(buildMetadata)
       pushLicenseReport(sshCredentialsId)
     } else {
@@ -32,7 +32,7 @@ class LicensingSupport {
     pipeline.echo 'Generating License Information'
     def licensingSupportType = licensingSupportTypeDeterminer.determineLicensingSupportType(buildMetadata)
     if (licensingSupportType == LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE) {
-      if (null == runtimeGradle) {
+      if (runtimeGradle == null) {
         pipeline.sh './gradlew downloadLicenses'
       } else {
         runtimeGradle.run buildFile: 'build.gradle', tasks: 'downloadLicenses'
