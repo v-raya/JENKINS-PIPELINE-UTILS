@@ -2,13 +2,12 @@ package gov.ca.cwds.jenkins.common
 
 class BuildMetadata {
   def script
-
   def jobName
   def buildId
   def projectPath
   def projectTypesDeterminer
 
-  def BuildMetadata(script, String jobName, String buildId, String projectPath) {
+  BuildMetadata(script, String jobName, String buildId, String projectPath) {
     this.script = script
     this.jobName = jobName
     this.buildId = buildId

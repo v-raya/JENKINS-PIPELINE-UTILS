@@ -7,8 +7,6 @@ class ContainerScannerSpecification extends Specification {
   class PipeLineScript {
     def build(hash) {
     }
-
-    def PipeLineScript() { }
   }
 
   def "#sendNotification"() {

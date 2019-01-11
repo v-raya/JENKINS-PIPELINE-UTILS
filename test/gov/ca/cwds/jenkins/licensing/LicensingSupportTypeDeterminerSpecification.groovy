@@ -7,9 +7,6 @@ import spock.lang.Specification
 class LicensingSupportTypeDeterminerSpecification extends Specification {
 
   class PipeLineScript {
-    PipeLineScript() {
-    }
-
     def sh(hash) { }
 
     def echo(string) { }

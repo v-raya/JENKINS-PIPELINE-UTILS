@@ -3,11 +3,11 @@ package gov.ca.cwds.jenkins
 class GithubRepoTagger {
   public static final String GIT_SSH_COMMAND = 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o ' +
     'StrictHostKeyChecking=no"'
-  public static final String  GIT_USER = "Jenkins"
-  public static final String  GIT_EMAIL = "cwdsdoeteam@osi.ca.gov"
+  public static final String  GIT_USER = 'Jenkins'
+  public static final String  GIT_EMAIL = 'cwdsdoeteam@osi.ca.gov'
   def script
 
-  def GithubRepoTagger(script) {
+  GithubRepoTagger(script) {
     this.script = script
   }
 
@@ -22,7 +22,7 @@ class GithubRepoTagger {
     }
     def configStatus = script.sh(script: configGitCredentialsCommand(), returnStatus: true)
     if ( configStatus != 0) {
-      throw new Exception("Unable to config the Jenkins user")
+      throw new Exception('Unable to config the Jenkins user')
     }
     def pushStatus = script.sh(script: "${GIT_SSH_COMMAND} git push origin ${tag}", returnStatus: true)
     if ( pushStatus != 0) {

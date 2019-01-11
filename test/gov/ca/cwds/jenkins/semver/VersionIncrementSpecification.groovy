@@ -9,7 +9,7 @@ class VersionIncrementSpecification extends Specification {
     def versionIncrement = new VersionIncrement()
 
     when:
-    def increment = versionIncrement.increment(["patch"])
+    def increment = versionIncrement.increment(['patch'])
 
     then:
     increment == IncrementTypes.PATCH
@@ -20,7 +20,7 @@ class VersionIncrementSpecification extends Specification {
     def versionIncrement = new VersionIncrement()
 
     when:
-    def increment = versionIncrement.increment(["minor"])
+    def increment = versionIncrement.increment(['minor'])
 
     then:
     increment == IncrementTypes.MINOR
@@ -31,7 +31,7 @@ class VersionIncrementSpecification extends Specification {
     def versionIncrement = new VersionIncrement()
 
     when:
-    def increment = versionIncrement.increment(["major"])
+    def increment = versionIncrement.increment(['major'])
 
     then:
     increment == IncrementTypes.MAJOR
@@ -42,11 +42,11 @@ class VersionIncrementSpecification extends Specification {
     def versionIncrement = new VersionIncrement()
 
     when:
-    def increment = versionIncrement.increment(["major", "minor"])
+    def increment = versionIncrement.increment(['major', 'minor'])
 
     then:
     def error = thrown(Exception)
-    error.message == "More than one version increment label found. " +
+    error.message == 'More than one version increment label found. ' +
       "Please label PR with only one of 'major', 'minor', or 'patch'"
   }
 

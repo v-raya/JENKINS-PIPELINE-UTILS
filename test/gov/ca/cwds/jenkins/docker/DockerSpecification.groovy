@@ -54,7 +54,7 @@ class DockerSpecification extends Specification {
     docker.removeTestingImage(buildMetadata)
 
     then:
-    1 * pipelineScript.sh([script: "docker rmi cwds/myjob:test-build-22", returnStatus: true])
+    1 * pipelineScript.sh([script: 'docker rmi cwds/myjob:test-build-22', returnStatus: true])
   }
 
   def "#withTestingImage implemented correctly"() {

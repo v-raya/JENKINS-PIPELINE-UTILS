@@ -1,12 +1,12 @@
 package gov.ca.cwds.jenkins
 
 class ManifestUpdater {
-  public static final String CARES_GITHUB_URL = "git@github.com:ca-cwds/cws-cares.git"
-  public static final String GIT_USER = "Jenkins"
-  public static final String GIT_EMAIL = "cwdsdoeteam@osi.ca.gov"
+  public static final String CARES_GITHUB_URL = 'git@github.com:ca-cwds/cws-cares.git'
+  public static final String GIT_USER = 'Jenkins'
+  public static final String GIT_EMAIL = 'cwdsdoeteam@osi.ca.gov'
   def script
 
-  def ManifestUpdater(script) {
+  ManifestUpdater(script) {
     this.script = script
   }
 
@@ -23,16 +23,16 @@ class ManifestUpdater {
   }
 
   def commitVersionInCares(applicationName, version, manifestName) {
-    if (script.sh(script: "git status --porcelain --untracked-files=no", returnStdout: true)) {
+    if (script.sh(script: 'git status --porcelain --untracked-files=no', returnStdout: true)) {
       script.sh(script: "git config --global user.email ${GIT_EMAIL}")
       script.sh(script: "git config --global user.name '${GIT_USER}'")
       script.sh(script: commitMessage(applicationName, version, manifestName))
-      script.sh(script: "git push origin master")
+      script.sh(script: 'git push origin master')
     }
   }
 
   private checkoutCares(credentialsId) {
-    script.git branch: "master", credentialsId: credentialsId, url: CARES_GITHUB_URL
+    script.git branch: 'master', credentialsId: credentialsId, url: CARES_GITHUB_URL
   }
 
   private updateManifestFile(applicationName, manifestName, version) {

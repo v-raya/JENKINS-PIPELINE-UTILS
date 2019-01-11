@@ -23,6 +23,6 @@ class Docker {
   }
 
   private testingImageName(BuildMetadata buildMetadata) {
-    return "cwds/${buildMetadata.jobName}:test-build-${buildMetadata.buildId}"
+    "cwds/${buildMetadata.jobName}:test-build-${buildMetadata.buildId}"
   }
 }

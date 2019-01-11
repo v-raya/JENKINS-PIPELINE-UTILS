@@ -15,6 +15,7 @@ class SemVer {
     this.versionIncrement = new VersionIncrement()
   }
 
+  @SuppressWarnings('UnnecessaryGetter')
   def newTag(label, List tagPrefixes = []) {
     def eventLabels = []
     if (tagPrefixes || !isValidIncrementLabel(label)) {
@@ -31,7 +32,8 @@ class SemVer {
     (tagPrefix ? tagPrefix + '-' : '') + newTagGenerator.newTag(existingTags, incrementLabel)
   }
 
+  @SuppressWarnings('UnnecessaryCollectCall')
   private boolean isValidIncrementLabel(label) {
-    return label && IncrementTypes.values().collect { it.toString() }.contains(label.toUpperCase())
+    label && IncrementTypes.values().collect { it.toString() }.contains(label.toUpperCase())
   }
 }

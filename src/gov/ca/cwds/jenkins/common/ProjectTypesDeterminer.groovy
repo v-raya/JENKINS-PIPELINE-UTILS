@@ -6,7 +6,7 @@ class ProjectTypesDeterminer {
   public static final String LINT_CONFIGS_JAVA = 'build.gradle'
   def script
 
-  def ProjectTypesDeterminer(script) {
+  ProjectTypesDeterminer(script) {
     this.script = script
   }
 

@@ -4,7 +4,7 @@ class VersionIncrement {
   def increment(labels) {
     def (versionIncrement, versionIncrementsFound) = assignIncrement(labels)
     if (versionIncrementsFound > 1) {
-      throw new Exception("More than one version increment label found."
+      throw new Exception('More than one version increment label found.'
         + " Please label PR with only one of 'major', 'minor', or 'patch'")
     }
     if (versionIncrementsFound == 0) {
@@ -18,15 +18,15 @@ class VersionIncrement {
     def versionIncrementsFound = 0
     labels.each { label ->
       switch (label) {
-        case "major":
+        case 'major':
           versionIncrement = IncrementTypes.MAJOR
           versionIncrementsFound++
           break
-        case "minor":
+        case 'minor':
           versionIncrement = IncrementTypes.MINOR
           versionIncrementsFound++
           break
-        case "patch":
+        case 'patch':
           versionIncrement = IncrementTypes.PATCH
           versionIncrementsFound++
           break

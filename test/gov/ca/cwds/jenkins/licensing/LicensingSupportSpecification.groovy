@@ -5,9 +5,6 @@ import spock.lang.Specification
 class LicensingSupportSpecification extends Specification {
 
   class PipeLineScript {
-    PipeLineScript() {
-    }
-
     def sshagent(hash, closure) {
       closure()
     }
@@ -18,9 +15,6 @@ class LicensingSupportSpecification extends Specification {
   }
 
   class RuntimeGradle {
-    RuntimeGradle() {
-    }
-
     def run(map) { }
   }
 

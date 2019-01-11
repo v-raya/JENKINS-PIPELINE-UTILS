@@ -9,7 +9,7 @@ class PullRequestEventSpecification extends Specification {
     def readJSON(hash) {
     }
 
-    def PipeLineScript() {
+    PipeLineScript() {
       this.env = new Environment()
     }
   }
@@ -18,16 +18,17 @@ class PullRequestEventSpecification extends Specification {
     @SuppressWarnings('PropertyName')
     String pull_request_event
 
-    def Environment() {
-      this.pull_request_event = "pr_event"
+    Environment() {
+      this.pull_request_event = 'pr_event'
     }
   }
 
+  @SuppressWarnings('UnnecessaryGetter')
   def "#getEvent"() {
     def buildArguments
 
     given:
-    def PipeLineScript pipeline = Spy()
+    PipeLineScript pipeline = Spy()
     def pullRequestEvent = new PullRequestEvent(pipeline)
 
     when:
@@ -35,6 +36,6 @@ class PullRequestEventSpecification extends Specification {
 
     then:
     1 * pipeline.readJSON(_) >> { arguments -> buildArguments = arguments[0] }
-    buildArguments['text'] == "pr_event"
+    buildArguments['text'] == 'pr_event'
   }
 }

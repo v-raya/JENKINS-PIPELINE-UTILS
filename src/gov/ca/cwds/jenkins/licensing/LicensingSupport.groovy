@@ -28,7 +28,7 @@ class LicensingSupport {
     }
   }
 
-  private def generateLicenseReport(buildMetadata) {
+  private generateLicenseReport(buildMetadata) {
     pipeline.echo 'Generating License Information'
     def licensingSupportType = licensingSupportTypeDeterminer.determineLicensingSupportType(buildMetadata)
     if (licensingSupportType == LicensingSupportType.GRADLE_HIERYNOMUS_LICENSE) {
@@ -41,7 +41,7 @@ class LicensingSupport {
       pipeline.sh "cp ${LICENSE_BUILD_FOLDER}/* ${LICENSE_FOLDER}"
     } else if (licensingSupportType == LicensingSupportType.RUBY_LICENSE_FINDER) {
       pipeline.sh script: "mkdir ${LICENSE_FOLDER}", returnStatus: true
-      dockerImage.withRun("-e CI=true") { container ->
+      dockerImage.withRun('-e CI=true') { container ->
         pipeline.sh script: "docker exec -t ${container.id} mkdir ${LICENSE_FOLDER}", returnStatus: true
         pipeline.sh "docker exec -t ${container.id} yarn licenses-report"
         def projectDir = pipeline.sh(script: "docker exec -t ${container.id} pwd", returnStdout: true).trim()
@@ -52,7 +52,7 @@ class LicensingSupport {
     }
   }
 
-  private def pushLicenseReport(sshCredentialsId) {
+  private pushLicenseReport(sshCredentialsId) {
     pipeline.echo 'Updating License Information'
     pipeline.sshagent(credentials: [sshCredentialsId]) {
       runGitSshCommand("git config --global user.name ${GIT_USER}")
@@ -63,7 +63,7 @@ class LicensingSupport {
     }
   }
 
-  private def runGitSshCommand(command) {
+  private runGitSshCommand(command) {
     // the GIT_SSH_COMMAND variable is used to avoid known_hosts addition
     // which would require each machine to have GitHub added in advance
     pipeline.sh script: 'GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" ' + command

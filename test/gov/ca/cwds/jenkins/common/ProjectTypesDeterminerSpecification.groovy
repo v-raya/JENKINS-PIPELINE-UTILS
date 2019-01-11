@@ -11,12 +11,12 @@ class ProjectTypesDeterminerSpecification extends Specification {
   def "#determineProjectTypes determines java correctly"() {
     given:
     def pipelineScript = Stub(PipelineScript)
-    pipelineScript.sh([script: "ls -al JavaProject/build.gradle", returnStatus: true]) >> 0
+    pipelineScript.sh([script: 'ls -al JavaProject/build.gradle', returnStatus: true]) >> 0
 
     def projectTypesDeterminer = new ProjectTypesDeterminer(pipelineScript)
 
     when:
-    def projectTypes = projectTypesDeterminer.determineProjectTypes("JavaProject")
+    def projectTypes = projectTypesDeterminer.determineProjectTypes('JavaProject')
 
     then:
     projectTypes.contains(ProjectTypes.JAVA)
@@ -25,12 +25,12 @@ class ProjectTypesDeterminerSpecification extends Specification {
   def "#determineProjectTypes determines javascript correctly"() {
     given:
     def pipelineScript = Stub(PipelineScript)
-    pipelineScript.sh([script: "ls -al JavascriptProject/.eslintrc", returnStatus: true]) >> 0
+    pipelineScript.sh([script: 'ls -al JavascriptProject/.eslintrc', returnStatus: true]) >> 0
 
     def projectTypesDeterminer = new ProjectTypesDeterminer(pipelineScript)
 
     when:
-    def projectTypes = projectTypesDeterminer.determineProjectTypes("JavascriptProject")
+    def projectTypes = projectTypesDeterminer.determineProjectTypes('JavascriptProject')
 
     then:
     projectTypes.contains(ProjectTypes.JAVASCRIPT)
@@ -39,12 +39,12 @@ class ProjectTypesDeterminerSpecification extends Specification {
   def "#determineProjectTypes determines ruby correctly"() {
     given:
     def pipelineScript = Stub(PipelineScript)
-    pipelineScript.sh([script: "ls -al RubyProject/.ruby-version", returnStatus: true]) >> 0
+    pipelineScript.sh([script: 'ls -al RubyProject/.ruby-version', returnStatus: true]) >> 0
 
     def projectTypesDeterminer = new ProjectTypesDeterminer(pipelineScript)
 
     when:
-    def projectTypes = projectTypesDeterminer.determineProjectTypes("RubyProject")
+    def projectTypes = projectTypesDeterminer.determineProjectTypes('RubyProject')
 
     then:
     projectTypes.contains(ProjectTypes.RUBY)
@@ -53,13 +53,13 @@ class ProjectTypesDeterminerSpecification extends Specification {
   def "#determineProjectTypes determines ruby and javascriopt correctly"() {
     given:
     def pipelineScript = Stub(PipelineScript)
-    pipelineScript.sh([script: "ls -al RubyAndJavascriptProject/.ruby-version", returnStatus: true]) >> 0
-    pipelineScript.sh([script: "ls -al RubyAndJavascriptProject/.eslintrc", returnStatus: true]) >> 0
+    pipelineScript.sh([script: 'ls -al RubyAndJavascriptProject/.ruby-version', returnStatus: true]) >> 0
+    pipelineScript.sh([script: 'ls -al RubyAndJavascriptProject/.eslintrc', returnStatus: true]) >> 0
 
     def projectTypesDeterminer = new ProjectTypesDeterminer(pipelineScript)
 
     when:
-    def projectTypes = projectTypesDeterminer.determineProjectTypes("RubyAndJavascriptProject")
+    def projectTypes = projectTypesDeterminer.determineProjectTypes('RubyAndJavascriptProject')
 
     then:
     projectTypes.containsAll([ProjectTypes.JAVASCRIPT, ProjectTypes.RUBY])

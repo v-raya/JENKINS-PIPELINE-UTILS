@@ -8,7 +8,7 @@ class PullRequestMergedTriggerSpecification extends Specification {
     def pullRequestMergedTrigger = new PullRequestMergedTrigger()
 
     when:
-    def properties = pullRequestMergedTrigger.triggerProperties("tokenParameter")
+    def  properties = pullRequestMergedTrigger.triggerProperties('tokenParameter')
 
     then:
     properties['$class'] == 'GenericTrigger'
