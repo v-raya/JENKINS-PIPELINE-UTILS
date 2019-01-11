@@ -1,7 +1,6 @@
 package gov.ca.cwds.jenkins
 
 import gov.ca.cwds.jenkins.docker.Docker
-import gov.ca.cwds.jenkins.common.BuildMetadata
 import gov.ca.cwds.jenkins.common.ProjectTypes
 
 class StaticAnalyzer {

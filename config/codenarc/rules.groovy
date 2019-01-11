@@ -268,4 +268,13 @@ ruleset {
     GroovyLangImmutable
     UseCollectMany
     UseCollectNested
+
+    // rulesets/imports.xml
+    DuplicateImport
+    ImportFromSamePackage
+    ImportFromSunPackages
+    MisorderedStaticImports
+    NoWildcardImports
+    UnnecessaryGroovyImport
+    UnusedImport
 }
