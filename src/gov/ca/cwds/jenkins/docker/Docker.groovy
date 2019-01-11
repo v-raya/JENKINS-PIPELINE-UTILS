@@ -14,7 +14,7 @@ class Docker {
   }
 
   def removeTestingImage(BuildMetadata buildMetadata) {
-    def status = script.sh(script: "docker rmi ${testingImageName(buildMetadata)}", returnStatus: true)
+    script.sh(script: "docker rmi ${testingImageName(buildMetadata)}", returnStatus: true)
   }
 
   def withTestingImage(String command, BuildMetadata buildMetadata) {

@@ -377,4 +377,15 @@ ruleset {
     UnnecessaryTernaryExpression
     UnnecessaryToString
     UnnecessaryTransientModifier
+
+    // rulesets/unused.xml
+    UnusedArray
+    UnusedMethodParameter {
+      doNotApplyToFileNames='*Specification.groovy'
+    }
+    UnusedObject
+    UnusedPrivateField
+    UnusedPrivateMethod
+    UnusedPrivateMethodParameter
+    UnusedVariable
 }

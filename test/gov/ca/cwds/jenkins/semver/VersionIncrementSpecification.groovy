@@ -42,7 +42,7 @@ class VersionIncrementSpecification extends Specification {
     def versionIncrement = new VersionIncrement()
 
     when:
-    def increment = versionIncrement.increment(['major', 'minor'])
+    versionIncrement.increment(['major', 'minor'])
 
     then:
     def error = thrown(Exception)
@@ -55,7 +55,7 @@ class VersionIncrementSpecification extends Specification {
     def versionIncrement = new VersionIncrement()
 
     when:
-    def increment = versionIncrement.increment([])
+    versionIncrement.increment([])
 
     then:
     def error = thrown(Exception)
