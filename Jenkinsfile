@@ -28,8 +28,8 @@ def buildPullRequest() {
     try {
       checkoutStage()
       docker.image('groovy:alpine').inside {
+        lintingStage()
       }
-      lintingStage()
       /*unitTestStage()*/
       /*checkForLabelPullRequest()*/
     } catch(Exception exception) {
