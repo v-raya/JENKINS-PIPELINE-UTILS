@@ -50,7 +50,7 @@ def checkoutStage() {
 
 def lintingStage() {
   stage('Linting') {
-    sh 'gradle check'
+    sh './gradlew check'
   }
 }
 
