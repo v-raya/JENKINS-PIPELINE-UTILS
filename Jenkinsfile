@@ -50,6 +50,7 @@ def checkoutStage() {
 
 def lintingStage() {
   stage('Linting') {
+    echo "Should run ./gradlew"
     sh './gradlew check'
   }
 }
