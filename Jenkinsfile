@@ -49,7 +49,7 @@ def checkoutStage() {
 }
 
 def lintingStage() {
-  stage('Linting') {
+  stage('Linting Test') {
     sh "ls -l"
     sh "pwd"
     echo "Should run ./gradlew"
